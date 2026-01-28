@@ -1,0 +1,82 @@
+/* Main layout */
+.trainer-container {
+  display: flex;
+  gap: 40px;
+  padding: 24px;
+  align-items: flex-start;
+}
+
+/* Left panel */
+.side-panel {
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Board column */
+.board-container {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* Chessground board MUST have fixed size */
+.board {
+  height: 60%;
+  width: 60%;
+  aspect-ratio: 1 / 1;
+}
+
+/* Typography */
+.opening-title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.eco {
+  margin: 0;
+  color: #777;
+}
+
+.description {
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+/* Dropdown */
+.variation-dropdown {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+/* Buttons */
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.actions button {
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  background: #4a90e2;
+  color: white;
+  font-weight: 600;
+}
+
+.actions button:hover {
+  background: #3a78c2;
+}
+coords {
+  display: flex !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  padding: 4px 0 !important;
+}

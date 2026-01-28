@@ -1,0 +1,30 @@
+<mat-toolbar color="primary" class="app-toolbar">
+  <div class="toolbar-left">
+    <span class="app-title">♟️ Chess Trainer</span>
+
+    <button mat-button type="button" routerLink="/">Home</button>
+    <button mat-button type="button" routerLink="/openings">Openings</button>
+  </div>
+
+  <div class="toolbar-right">
+    <button mat-icon-button type="button" aria-label="Notifications">
+      <mat-icon>notifications</mat-icon>
+    </button>
+
+    @if (user) {
+      <div class="user-info" [matMenuTriggerFor]="userMenu">
+        <img [src]="user.picture" class="avatar" />
+        <span>{{ user.name }}</span>
+      </div>
+
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </mat-menu>
+    } @else {
+      <button mat-button type="button" routerLink="/login" class="login-btn">Login</button>
+    }
+  </div>
+</mat-toolbar>

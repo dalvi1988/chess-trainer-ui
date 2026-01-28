@@ -1,0 +1,31 @@
+<div class="login-wrapper">
+  <mat-card class="login-card">
+    <h2 class="login-title">Welcome to Chess Trainer</h2>
+    <p class="login-subtitle">Sign in to continue your training</p>
+
+    <div class="provider-buttons">
+      <button mat-stroked-button class="provider-btn google" (click)="loginWithGoogle()">
+        <img src="assets/icons/google.svg" class="provider-icon" alt="Google" />
+        Sign in with Google
+      </button>
+
+      <button mat-stroked-button class="provider-btn facebook" (click)="loginWithFacebook()">
+        <img src="assets/icons/facebook.svg" class="provider-icon" alt="Facebook" />
+        Continue with Facebook
+      </button>
+    </div>
+
+    <div class="divider">
+      <span>OR</span>
+    </div>
+
+    <button mat-raised-button color="primary" class="manual-btn" routerLink="/signup">
+      Create an Account
+    </button>
+
+    <p class="login-footer">
+      Already have an account?
+      <a routerLink="/manual-login">Sign in</a>
+    </p>
+  </mat-card>
+</div>

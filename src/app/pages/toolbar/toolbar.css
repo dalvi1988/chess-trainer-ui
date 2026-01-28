@@ -1,0 +1,69 @@
+.app-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  height: 64px;
+  background: #1e88e5; /* Material primary shade */
+  color: white;
+}
+
+/* Left side: title + nav buttons */
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.app-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-right: 24px;
+}
+
+/* Right side: notifications + login/user */
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* User info block */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.user-info:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Avatar image */
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid white;
+  object-fit: cover;
+}
+
+/* Login button */
+.login-btn {
+  font-weight: 500;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 20px;
+  padding: 4px 16px;
+  transition: border-color 0.2s ease;
+}
+
+.login-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: white;
+}

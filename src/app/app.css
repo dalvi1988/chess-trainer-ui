@@ -1,0 +1,32 @@
+.app-toolbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.app-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-right: 24px;
+}
+
+.app-content {
+  padding: 24px;
+}
+
+.login-btn {
+  font-weight: 600;
+  text-transform: none;
+}

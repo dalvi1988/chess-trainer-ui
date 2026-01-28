@@ -1,1 +1,34 @@
 /* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+coords {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0px 0px;
+  box-sizing: border-box;
+}
+
+coords.ranks {
+  flex-direction: column;
+  height: 100%;
+  padding: 4px 6px;
+}
+
+coord {
+  font-size: 20px;
+  font-weight: 700;
+  color: #444;
+  opacity: 1;
+  line-height: 1;
+  text-align: center;
+  width: 20px;
+  height: 20px;
+}

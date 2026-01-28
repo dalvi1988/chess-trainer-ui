@@ -1,0 +1,30 @@
+<div class="trainer-container">
+  <!-- LEFT: INFO PANEL -->
+  <div class="side-panel">
+    @if (opening) {
+      <h1 class="opening-title">{{ opening.name }}</h1>
+      <p class="eco"><strong>ECO:</strong> {{ opening.eco }}</p>
+
+      <p class="description">DESCRIPTION: {{ opening.description }}</p>
+      <p class="eco"><strong>SIDE:</strong> {{ opening.side }}</p>
+      <label class="variation-label"><strong>Select Sub‑Line:</strong></label>
+
+      <select id="variationSelect" class="variation-dropdown" (change)="onVariationSelect($event)">
+        <option value="">-- Choose a variation --</option>
+
+        @for (variation of opening.variations; track variation.id) {
+          <option [value]="variation.id">{{ variation.name }} – {{ variation.moves }}</option>
+        }
+      </select>
+
+      <div class="actions">
+        <button (click)="showHint()">Hint</button>
+      </div>
+    }
+  </div>
+
+  <!-- RIGHT: BOARD -->
+  <div class="board-container">
+    <div id="board" class="board"></div>
+  </div>
+</div>

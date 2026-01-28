@@ -1,0 +1,103 @@
+.home-wrapper {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.banner {
+  background: linear-gradient(90deg, #ff9800, #ffb74d);
+  color: #fff;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 32px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  letter-spacing: 0.3px;
+  animation: pulseGlow 2.5s infinite ease-in-out;
+}
+
+/* Subtle glowing animation */
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 0 rgba(255, 152, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 18px rgba(255, 152, 0, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(255, 152, 0, 0.4);
+  }
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 40px;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 28px;
+  padding: 0 20px;
+}
+
+.feature-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 28px 20px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+  position: relative;
+}
+
+.feature-card .icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.feature-card h3 {
+  margin: 10px 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.feature-card p {
+  color: #666;
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+
+.feature-card.active {
+  cursor: pointer;
+}
+
+.feature-card.active:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.feature-card.coming {
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+.badge {
+  background: #ff9800;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-block;
+  margin-top: 10px;
+}
