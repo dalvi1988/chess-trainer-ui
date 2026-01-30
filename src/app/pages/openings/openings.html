@@ -2,6 +2,7 @@
 <p>Select an opening to explore moves and variations.</p>
 
 <input type="text" placeholder="Search openings..." class="search-box" [(ngModel)]="searchTerm" />
+
 <div class="side-toggle">
   <button class="toggle-btn" [class.active]="filterSide === 'all'" (click)="filterSide = 'all'">
     All
@@ -15,6 +16,7 @@
     ♚ Black
   </button>
 </div>
+
 <div class="openings-container">
   @for (opening of filteredOpenings(); track opening.id) {
     <mat-card
@@ -25,33 +27,36 @@
       }"
       [routerLink]="['/openings', opening.id]"
     >
+      <!-- TOP IMAGE (60%) -->
+      <img
+        class="opening-thumb"
+        [src]="'assets/openings/' + opening.name + '.jpg'"
+        alt="{{ opening.name }}"
+      />
+
+      <!-- CONTENT (40%) -->
       <div class="card-content">
-        <!-- LEFT SIDE IMAGE -->
-        <img class="opening-thumb" [src]="opening.imageUrl" alt="{{ opening.name }}" />
-
-        <!-- RIGHT SIDE TEXT -->
-        <div class="opening-info">
-          <div class="card-title">
-            {{ opening.name }}
-          </div>
-
-          <div class="card-side">
-            @if (opening.side === 'white') {
-              <span class="side-icon">♔</span>
-            }
-            @if (opening.side === 'black') {
-              <span class="side-icon">♚</span>
-            }
-            Side: {{ opening.side }}
-          </div>
-
-          <div class="card-description">
-            {{ opening.description }}
-          </div>
-          @if (!opening.variations || opening.variations.length === 0) {
-            <div class="coming-soon">Coming Soon</div>
-          }
+        <div class="card-title">
+          {{ opening.name }}
         </div>
+
+        <div class="card-side">
+          @if (opening.side === 'white') {
+            <span class="side-icon">♔</span>
+          }
+          @if (opening.side === 'black') {
+            <span class="side-icon">♚</span>
+          }
+          {{ opening.side | titlecase }}
+        </div>
+
+        <div class="card-description">
+          {{ opening.description }}
+        </div>
+
+        @if (!opening.variations || opening.variations.length === 0) {
+          <div class="coming-soon">Coming Soon</div>
+        }
       </div>
     </mat-card>
   }

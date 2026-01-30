@@ -9,56 +9,52 @@
   font-size: 16px;
 }
 
-/* BASE CARD */
+/* CARD — fixed height so 60/40 works */
 .opening-card {
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 14px;
-  padding: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
   cursor: pointer;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  height: 360px; /* adjust if needed */
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease;
 }
 
-/* PREMIUM HOVER EFFECT */
+/* HOVER EFFECT */
 .opening-card:hover {
   transform: translateY(-6px) scale(1.02);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
 }
 
-/* FLEX LAYOUT: IMAGE LEFT, TEXT RIGHT */
-.card-content {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 4px;
-}
-
-/* IMAGE */
+/* IMAGE — 60% of card height */
 .opening-thumb {
-  width: 90px;
-  height: 90px;
-  border-radius: 10px;
+  flex: 0 0 60%;
+  width: 100%;
   object-fit: cover;
-  flex-shrink: 0;
+  display: block;
 }
 
-/* TEXT AREA */
-.opening-info {
+/* CONTENT — 40% of card height */
+.card-content {
+  flex: 0 0 40%;
+  padding: 14px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  justify-content: space-between;
 }
 
+/* TITLE */
 .card-title {
   font-size: 20px;
   font-weight: 700;
   color: #111827;
 }
 
+/* SIDE LABEL */
 .card-side {
   font-size: 14px;
   font-weight: 500;
@@ -77,9 +73,28 @@
   font-size: 15px;
   color: #374151;
   line-height: 1.4;
+  flex-grow: 1;
 }
 
-/* BLACK GAMBITS — DARK THEME */
+/* COMING SOON BADGE */
+.coming-soon {
+  margin-top: 6px;
+  padding: 4px 8px;
+  background: #ff9800;
+  color: white;
+  font-weight: bold;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+/* DISABLED CARDS */
+.disabled-card {
+  opacity: 0.5;
+  pointer-events: none;
+  filter: grayscale(100%);
+}
+
+/* DARK THEME FOR BLACK OPENINGS */
 .black-card {
   background: #111827 !important;
   border: 1px solid #1f2937 !important;
@@ -99,32 +114,18 @@
 }
 
 .black-card:hover {
-  transform: translateY(-6px) scale(1.02);
   box-shadow: 0 10px 25px rgba(255, 255, 255, 0.15) !important;
 }
 
-/* GRID LAYOUT */
+/* GRID */
 .openings-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 22px;
   margin-top: 20px;
 }
-.disabled-card {
-  opacity: 0.5;
-  pointer-events: none; /* prevents clicking */
-  filter: grayscale(100%);
-}
 
-.coming-soon {
-  margin-top: 8px;
-  padding: 4px 8px;
-  background: #ff9800;
-  color: white;
-  font-weight: bold;
-  border-radius: 4px;
-  display: inline-block;
-}
+/* SIDE FILTER BUTTONS */
 .side-toggle {
   display: flex;
   gap: 10px;

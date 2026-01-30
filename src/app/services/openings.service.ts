@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Opening } from '../models/openings';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OpeningsService {
-  private api = 'http://localhost:8080/api/openings';
+  private backendURL = environment.apiUrl;
+  private api = `${this.backendURL}/api/openings`;
 
   constructor(private http: HttpClient) {}
 

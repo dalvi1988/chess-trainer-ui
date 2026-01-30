@@ -32,15 +32,11 @@ export class Toolbar implements OnInit {
   }
 
   logout() {
-    // Clear Angular state
     this.userService.setUser(null);
 
-    // Clear backend session
-    fetch('http://localhost:8080/logout', {
-      method: 'POST',
-      credentials: 'include',
-    }).finally(() => {
-      window.location.href = '/';
+    this.userService.logout().subscribe({
+      next: () => (window.location.href = '/'),
+      error: () => (window.location.href = '/'),
     });
   }
 }

@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
+  private backendURL = environment.apiUrl;
   private user$ = new BehaviorSubject<any>(null);
 
   constructor(private http: HttpClient) {}
@@ -18,14 +20,14 @@ export class UserService {
 
   // ⭐ Restore user session after page refresh
   autoLogin() {
-    return this.http.get<any>('http://localhost:8080/api/me', {
+    return this.http.get<any>(`${this.backendURL}/api/me`, {
       withCredentials: true,
     });
   }
 
   login(email: string, password: string) {
     return this.http.post(
-      'http://localhost:8080/api/login',
+      `${this.backendURL}/api/login`,
       { email, password },
       { responseType: 'text', withCredentials: true },
     );
@@ -33,15 +35,29 @@ export class UserService {
 
   signup(name: string, email: string, password: string) {
     return this.http.post(
-      'http://localhost:8080/api/auth/signup',
+      `${this.backendURL}/api/auth/signup`,
       { name, email, password },
       { responseType: 'text', withCredentials: true },
     );
   }
 
   verifyEmail(token: string) {
-    return this.http.get(`http://localhost:8080/api/verify-email?token=${token}`, {
+    return this.http.get(`${this.backendURL}/api/verify-email?token=${token}`, {
       responseType: 'text',
     });
+  }
+
+  loginSuccess() {
+    return this.http.get(`${this.backendURL}/api/me`, { withCredentials: true });
+  }
+
+  logout() {
+    return this.http.post(
+      `${environment.apiUrl}/logout`,
+      {},
+      {
+        withCredentials: true,
+      },
+    );
   }
 }

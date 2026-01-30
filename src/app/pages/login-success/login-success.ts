@@ -16,12 +16,9 @@ export class LoginSuccess implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.http
-      .get<User>('http://localhost:8080/api/me', { withCredentials: true })
-      .subscribe((user) => {
-        console.log('LoginSuccess received user:', user);
-        this.userService.setUser(user);
-        this.router.navigate(['/']);
-      });
+    this.userService.loginSuccess().subscribe((user) => {
+      this.userService.setUser(user);
+      this.router.navigate(['/']);
+    });
   }
 }

@@ -5,11 +5,12 @@ import { OpeningsService } from '../../services/openings.service';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
+import { TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-openings',
   standalone: true,
-  imports: [MatCardModule, RouterLink, MatButtonModule, FormsModule, NgClass],
+  imports: [MatCardModule, RouterLink, MatButtonModule, FormsModule, NgClass, TitleCasePipe],
   templateUrl: './openings.html',
   styleUrl: './openings.css',
 })
