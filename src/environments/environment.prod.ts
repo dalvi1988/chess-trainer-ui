@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.chesslearninghub.com/',
+  apiUrl: 'https://api.chesslearninghub.com',
 };
