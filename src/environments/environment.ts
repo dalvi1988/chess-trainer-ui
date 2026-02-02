@@ -1,4 +1,4 @@
 export const environment = {
-  production: true,
-  apiUrl: 'https://api.chesslearninghub.com',
+  production: false,
+  apiUrl: 'http://localhost:8080',
 };

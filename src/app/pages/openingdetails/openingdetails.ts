@@ -33,9 +33,9 @@ export class Openingdetails implements AfterViewInit {
   ) {}
 
   ngOnInit() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    const openingName = String(this.route.snapshot.paramMap.get('name'));
 
-    this.openingsService.getById(id).subscribe((data: Opening) => {
+    this.openingsService.getByName(openingName).subscribe((data: Opening) => {
       this.opening = data;
       this.chess.reset();
 

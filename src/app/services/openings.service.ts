@@ -24,4 +24,9 @@ export class OpeningsService {
       withCredentials: true,
     });
   }
+  getByName(name: String): Observable<Opening> {
+    return this.http.get<Opening>(`${this.api}/${name}`, {
+      withCredentials: true,
+    });
+  }
 }

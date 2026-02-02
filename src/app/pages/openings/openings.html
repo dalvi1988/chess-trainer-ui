@@ -25,7 +25,7 @@
         'black-card': opening.side === 'black',
         'disabled-card': !opening.variations || opening.variations.length === 0,
       }"
-      [routerLink]="['/openings', opening.id]"
+      [routerLink]="['/openings', opening.name]"
     >
       <!-- TOP IMAGE (60%) -->
       <img

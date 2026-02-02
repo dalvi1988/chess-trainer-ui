@@ -11,7 +11,7 @@ import { VerifyEmail } from './pages/login/verifymail/verifymail';
 
 export const routes: Routes = [
   { path: '', component: Home },
-  { path: 'openings/:id', component: Openingdetails, canActivate: [AuthGuard] },
+  { path: 'openings/:name', component: Openingdetails, canActivate: [AuthGuard] },
   { path: 'login', component: Login },
   { path: 'login/success', component: LoginSuccess },
   { path: 'manual-login', component: SignIn },
