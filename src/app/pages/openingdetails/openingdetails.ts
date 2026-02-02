@@ -7,10 +7,6 @@ import { OpeningsService } from '../../services/openings.service';
 import { StockfishService } from '../../services/stockfish-service';
 import { Chessground } from 'chessground';
 
-import 'chessground/assets/chessground.base.css';
-import 'chessground/assets/chessground.brown.css';
-import 'chessground/assets/chessground.cburnett.css';
-
 @Component({
   selector: 'app-openingdetails',
   standalone: true,
