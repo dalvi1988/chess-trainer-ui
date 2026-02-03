@@ -59,7 +59,13 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "chess-trainer-ui:build:production"
+              "buildTarget": "chess-trainer-ui:build:production",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ]
             },
             "development": {
               "buildTarget": "chess-trainer-ui:build:development"
