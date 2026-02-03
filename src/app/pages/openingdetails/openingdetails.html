@@ -1,22 +1,40 @@
 <div class="trainer-container">
-  <!-- LEFT: INFO PANEL -->
+  <!-- LEFT PANEL -->
   <div class="side-panel">
     @if (opening) {
       <h1 class="opening-title">{{ opening.name }}</h1>
       <p class="eco"><strong>ECO:</strong> {{ opening.eco }}</p>
 
-      <p class="description">DESCRIPTION: {{ opening.description }}</p>
-      <p class="eco"><strong>BASIC MOVES:</strong> {{ opening.moves }}</p>
-      <p class="eco"><strong>SIDE:</strong> {{ opening.side }}</p>
+      <p class="description">{{ opening.description }}</p>
+
+      <p class="eco"><strong>Basic Moves:</strong> {{ opening.moves }}</p>
+      <p class="eco"><strong>Side:</strong> {{ opening.side }}</p>
+
+      <!-- Variation Selector -->
       <label class="variation-label"><strong>Select Sub‑Line:</strong></label>
 
-      <select id="variationSelect" class="variation-dropdown" (change)="onVariationSelect($event)">
-        <option value="">-- Choose a variation --</option>
-
-        @for (variation of opening.variations; track variation.id) {
-          <option [value]="variation.id">{{ variation.name }} – {{ variation.moves }}</option>
+      <select
+        class="variation-dropdown"
+        [(ngModel)]="selectedVariationId"
+        (change)="onVariationSelect($event)"
+      >
+        @for (v of opening.variations; track v.id) {
+          <option [value]="v.id">{{ v.name }}</option>
         }
       </select>
+
+      <!-- Variation Details -->
+      @if (selectedVariation) {
+        <div class="variation-details">
+          <h3>{{ selectedVariation.name }}</h3>
+
+          <p class="moves"><strong>Moves:</strong> {{ selectedVariation.moves }}</p>
+
+          @if (selectedVariation.name) {
+            <p class="explanation"><strong>Idea:</strong> {{ selectedVariation.name }}</p>
+          }
+        </div>
+      }
 
       <div class="actions">
         <button (click)="showHint()">Hint</button>
