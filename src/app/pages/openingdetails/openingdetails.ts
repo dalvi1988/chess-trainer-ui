@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { VariationCompleteDialog } from '../variation-complete-dialog/variation-complete-dialog';
 import { FormsModule } from '@angular/forms';
+import { PromotionDialogComponent } from '../promotion-dialog/promotion-dialog';
 
 @Component({
   selector: 'app-openingdetails',
@@ -126,7 +127,19 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
   // ---------- helpers ----------
 
   private normalizeSan(san: string): string {
-    return san.replace(/[+#?!]/g, '').trim();
+    if (!san) return san;
+
+    // ❗ Do NOT remove promotion piece
+    // Remove check/mate only
+    san = san.replace(/[+#]/g, '');
+
+    // Remove capture symbol
+    san = san.replace(/x/g, '');
+
+    // Remove disambiguation (but keep promotion)
+    san = san.replace(/^[KQRBN]?[a-h]?[1-8]?/, '');
+
+    return san.trim();
   }
 
   private clearShapes(brush: string) {
@@ -242,31 +255,58 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
   onMove(from: string, to: string) {
     const beforeFen = this.chess.fen();
 
-    // Detect "select another own piece" instead of a real move
+    // Selecting another own piece
     const fromPiece = this.chess.get(from as any);
     const toPiece = this.chess.get(to as any);
 
     if (fromPiece && toPiece && fromPiece.color === toPiece.color) {
-      // Just change selection, no wrong sound, no move
-      this.chess.load(beforeFen); // ensure position unchanged
-      this.onSelect(to); // reuse your selection logic
+      this.chess.load(beforeFen);
+      this.onSelect(to);
       return;
     }
 
-    let move;
+    // ⭐ Promotion move
+    if (this.isPromotionMove(from, to)) {
+      const dialogRef = this.dialog.open(PromotionDialogComponent, {
+        width: '300px',
+      });
 
-    // Try to make the move
+      dialogRef.afterClosed().subscribe((piece: string) => {
+        if (!piece) {
+          this.chess.load(beforeFen);
+          this.updateBoard();
+          return;
+        }
+
+        const move = this.chess.move({
+          from,
+          to,
+          promotion: piece,
+        });
+
+        if (!move) {
+          this.chess.load(beforeFen);
+          this.updateBoard();
+          return;
+        }
+
+        this.handleMoveResult(move, from, to);
+      });
+
+      return;
+    }
+
+    // ⭐ Normal (non-promotion) move
+    let move;
     try {
-      move = this.chess.move({ from, to, promotion: 'q' });
+      move = this.chess.move({ from, to }); // <-- FIXED: no forced promotion
     } catch {
-      // Illegal move → revert
       this.chess.load(beforeFen);
       this.playSound('wrong');
       this.updateBoard();
       return;
     }
 
-    // Illegal move (null)
     if (!move) {
       this.chess.load(beforeFen);
       this.playSound('wrong');
@@ -274,45 +314,8 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
       return;
     }
 
-    // Get expected move from variation
-    const expected = this.variationMoves[this.currentMoveIndex];
-
-    // ⭐ Correct move
-    if (this.normalizeSan(move.san) === this.normalizeSan(expected)) {
-      this.playSound(move.flags.includes('c') ? 'capture' : 'move');
-
-      // Highlight correct move
-      this.clearShapes('wrong');
-      this.clearShapes('correct');
-      this.highlightPair(from, to, 'correct');
-
-      this.currentMoveIndex++;
-
-      // ⭐ Auto-play opponent move
-      if (this.currentMoveIndex < this.variationMoves.length) {
-        this.autoPlayNextMove();
-      }
-
-      this.updateBoard();
-
-      if (this.currentMoveIndex >= this.variationMoves.length) {
-        this.openCompletionDialog();
-      }
-
-      return;
-    }
-
-    // ❌ Wrong move
-    this.playSound('wrong');
-    this.clearShapes('correct');
-    this.clearShapes('wrong');
-    this.highlightPair(from, to, 'wrong');
-
-    // Revert position
-    this.chess.load(beforeFen);
-    this.updateBoard();
+    this.handleMoveResult(move, from, to);
   }
-
   showHint() {
     if (this.currentMoveIndex >= this.variationMoves.length) return;
 
@@ -375,5 +378,72 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
         this.cancelVariation();
       }
     });
+  }
+  openPromotionDialog(from: string, to: string) {
+    const dialogRef = this.dialog.open(PromotionDialogComponent, {
+      width: '300px',
+      data: {},
+    });
+
+    dialogRef.afterClosed().subscribe((piece: string) => {
+      if (!piece) return;
+
+      const move = this.chess.move({ from, to, promotion: piece });
+
+      if (!move) return;
+
+      this.handleMoveResult(move, from, to);
+    });
+  }
+
+  private isPromotionMove(from: string, to: string): boolean {
+    const piece = this.chess.get(from as any);
+    if (!piece || piece.type !== 'p') return false;
+
+    const targetRank = to[1];
+
+    return (
+      (piece.color === 'w' && targetRank === '8') || (piece.color === 'b' && targetRank === '1')
+    );
+  }
+
+  private handleMoveResult(move: any, from: string, to: string) {
+    const expected = this.variationMoves[this.currentMoveIndex];
+
+    console.log('RAW move.san:', move.san);
+    console.log('RAW expected:', expected);
+    console.log('NORM move.san:', this.normalizeSan(move.san));
+    console.log('NORM expected:', this.normalizeSan(expected));
+    console.log('currentMoveIndex:', this.currentMoveIndex);
+
+    if (this.normalizeSan(move.san) === this.normalizeSan(expected)) {
+      this.playSound(move.flags.includes('c') ? 'capture' : 'move');
+
+      this.clearShapes('wrong');
+      this.clearShapes('correct');
+      this.highlightPair(from, to, 'correct');
+
+      this.currentMoveIndex++;
+
+      if (this.currentMoveIndex < this.variationMoves.length) {
+        this.autoPlayNextMove();
+      }
+
+      this.updateBoard();
+
+      if (this.currentMoveIndex >= this.variationMoves.length) {
+        this.openCompletionDialog();
+      }
+
+      return;
+    }
+
+    this.playSound('wrong');
+    this.clearShapes('correct');
+    this.clearShapes('wrong');
+    this.highlightPair(from, to, 'wrong');
+
+    this.chess.undo();
+    this.updateBoard();
   }
 }

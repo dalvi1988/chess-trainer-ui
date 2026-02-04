@@ -1,16 +1,18 @@
-// All @use statements MUST be at the top
+// MUST be the first line
 @use '@angular/material' as mat;
 
-// Define your theme ONCE
+// Define your Material 3 theme
 html {
-  @include mat.theme((
-    color: (
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$cyan-palette,
+        tertiary: mat.$blue-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
 }
 
 body {

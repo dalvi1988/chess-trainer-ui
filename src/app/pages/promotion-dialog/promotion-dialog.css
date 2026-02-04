@@ -1,0 +1,20 @@
+.pieces {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+}
+
+.piece {
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.piece img {
+  width: 60px;
+  height: 60px;
+}
+
+.piece:hover {
+  transform: scale(1.1);
+}
