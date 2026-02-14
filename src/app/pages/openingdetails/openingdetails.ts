@@ -321,7 +321,7 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
 
     const san = this.variationMoves[this.currentMoveIndex];
     const moves = this.chess.moves({ verbose: true }) as any[];
-    const hintMove = moves.find((m) => this.normalizeSan(m.san) === this.normalizeSan(san));
+    const hintMove = moves.find((m) => m.san === san);
 
     if (!hintMove) return;
 
