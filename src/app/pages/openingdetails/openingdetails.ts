@@ -420,6 +420,7 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
       this.playSound(move.flags.includes('c') ? 'capture' : 'move');
 
       this.clearShapes('wrong');
+      this.clearShapes('yellow');
       this.clearShapes('correct');
       this.highlightPair(from, to, 'correct');
 
