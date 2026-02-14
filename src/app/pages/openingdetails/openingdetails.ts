@@ -416,7 +416,7 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
     console.log('NORM expected:', this.normalizeSan(expected));
     console.log('currentMoveIndex:', this.currentMoveIndex);
 
-    if (this.normalizeSan(move.san) === this.normalizeSan(expected)) {
+    if (move.san === expected) {
       this.playSound(move.flags.includes('c') ? 'capture' : 'move');
 
       this.clearShapes('wrong');
