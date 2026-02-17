@@ -204,18 +204,20 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
         shapes: [...this.shapes],
       },
     });
-    // Ask Stockfish to evaluate
-    // Debounce Stockfish evaluation
-    if (this.currentMoveIndex < this.variationMoves.length - 1) {
-      console.log(
-        'evaltingggggggg' + this.variationMoves.length + 'current index: ' + this.currentMoveIndex,
-      );
+    // Ask Stockfish to evaluate only after MY move
+    const sideToMove = this.chess.turn(); // 'w' or 'b'
+
+    if (sideToMove !== this.opening.side?.toLowerCase().trim().charAt(0)) {
+      console.log("Skipping eval — opponent's turn.");
+      return;
+    }
+
+    if (this.currentMoveIndex <= this.variationMoves.length - 1) {
       clearTimeout(this.evalTimeout);
       this.evalTimeout = setTimeout(() => {
-        console.log('Evaluating FEN:', this.chess.fen());
-
+        console.log('Evaluating FEN: ' + sideToMove, this.chess.fen());
         this.evaluatePosition(this.chess.fen());
-      }, 150); // 150ms is perfect
+      }, 150);
     } else {
       console.log('No more moves to eval, skipping Stockfish call.');
     }
