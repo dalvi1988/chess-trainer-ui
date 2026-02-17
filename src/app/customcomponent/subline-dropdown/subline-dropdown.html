@@ -1,0 +1,37 @@
+<div class="dropdown-container">
+  <!-- SELECTED ITEM -->
+  <div class="dropdown-selected" (click)="toggle()">
+    <!-- Name (NO tooltip here) -->
+    <div class="line-name">
+      {{ selectedLine?.name }}
+    </div>
+
+    <!-- Moves WITH tooltip -->
+    <div class="tooltip" [attr.data-full]="shortMoves(selectedLine?.moves)">
+      <div class="line-moves">
+        {{ shortMoves(selectedLine?.moves) }}
+      </div>
+    </div>
+  </div>
+
+  <!-- DROPDOWN LIST -->
+  @if (open) {
+    <div class="dropdown-list">
+      @for (line of subLines; track line.id) {
+        <div class="dropdown-item" (click)="select(line)">
+          <!-- Name (NO tooltip) -->
+          <div class="line-name">
+            {{ line.name }}
+          </div>
+
+          <!-- Moves WITH tooltip -->
+          <div class="tooltip" [attr.data-full]="shortMoves(line.moves)">
+            <div class="line-moves">
+              {{ shortMoves(line.moves) }}
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

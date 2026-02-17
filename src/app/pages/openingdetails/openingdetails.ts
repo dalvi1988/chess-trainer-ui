@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { Opening } from '../../models/openings';
 import { Chess } from 'chess.js';
 import { OpeningsService } from '../../services/openings.service';
-import { StockfishService } from '../../services/stockfish-service';
+import { SublineDropdownComponent } from '../../customcomponent/subline-dropdown/subline-dropdown';
 import { Chessground } from 'chessground';
 import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -15,7 +15,7 @@ import { EvaluationBarComponent } from '../evaluation-bar/evaluation-bar';
 @Component({
   selector: 'app-openingdetails',
   standalone: true,
-  imports: [FormsModule, MatCardModule, EvaluationBarComponent],
+  imports: [FormsModule, MatCardModule, EvaluationBarComponent, SublineDropdownComponent],
   templateUrl: './openingdetails.html',
   styleUrl: './openingdetails.css',
 })
@@ -58,7 +58,7 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
         this.selectedVariation = first;
         this.selectedVariationId = first.id; // ⭐ dropdown updates
 
-        this.onVariationSelect({ target: { value: first.id } });
+        this.onVariationSelect(first);
       }
     });
 
@@ -269,8 +269,12 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
     this.updateBoard();
   }
 
-  onVariationSelect(event: any) {
-    const id = Number(event.target.value);
+  onVariationSelect(line: any) {
+    this.selectedVariation = line;
+    const id = line.id;
+
+    this.chess.reset();
+
     this.selectedVariation =
       this.opening.variations.find((v: OpeningVariation) => v.id === id) || null;
 
@@ -411,7 +415,7 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
       this.selectedVariation = next;
       this.selectedVariationId = next.id; // ⭐ updates dropdown
 
-      this.onVariationSelect({ target: { value: next.id } });
+      this.onVariationSelect(next);
     }
   }
 

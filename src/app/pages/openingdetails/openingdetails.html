@@ -10,18 +10,14 @@
       <p class="eco"><strong>Basic Moves:</strong> {{ opening.moves }}</p>
       <p class="eco"><strong>Side:</strong> {{ opening.side }}</p>
 
-      <!-- Variation Selector -->
+      <!-- Sub‑Line Selector -->
       <label class="variation-label"><strong>Select Sub‑Line:</strong></label>
 
-      <select
-        class="variation-dropdown"
-        [(ngModel)]="selectedVariationId"
-        (change)="onVariationSelect($event)"
-      >
-        @for (v of opening.variations; track v.id) {
-          <option [value]="v.id">{{ v.name }}</option>
-        }
-      </select>
+      <app-subline-dropdown
+        [subLines]="opening.variations"
+        [selectedLine]="selectedVariation"
+        (lineSelected)="onVariationSelect($event)"
+      ></app-subline-dropdown>
 
       <!-- Variation Details -->
       @if (selectedVariation) {
@@ -42,7 +38,7 @@
     }
   </div>
 
-  <!-- RIGHT SIDE: BOARD + EVAL BAR TOGETHER -->
+  <!-- RIGHT SIDE: BOARD + EVAL BAR -->
   <div class="board-and-bar">
     <div class="board-wrapper">
       <div id="board" class="board"></div>
