@@ -17,12 +17,19 @@
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "assets": [
+              "src/BingSiteAuth.xml",
               "src/assets",
+              {
+                "glob": "**/*",
+                "input": "src/assets/stockfish",
+                "output": "/assets/stockfish"
+              },
               {
                 "glob": "**/*",
                 "input": "public"
               }
             ],
+
             "styles": [
               "src/custom-theme.scss",
               "src/styles.css",
@@ -69,7 +76,11 @@
               "buildTarget": "chess-trainer-ui:build:production"
             },
             "development": {
-              "buildTarget": "chess-trainer-ui:build:development"
+              "buildTarget": "chess-trainer-ui:build:development",
+              "headers": {
+                "Cross-Origin-Opener-Policy": "same-origin",
+                "Cross-Origin-Embedder-Policy": "require-corp"
+              }
             }
           },
           "defaultConfiguration": "development"
@@ -84,6 +95,11 @@
             "tsConfig": "tsconfig.spec.json",
             "assets": [
               "src/assets",
+              {
+                "glob": "**/*",
+                "input": "src/assets/stockfish",
+                "output": "/assets/stockfish"
+              },
               {
                 "glob": "**/*",
                 "input": "public"

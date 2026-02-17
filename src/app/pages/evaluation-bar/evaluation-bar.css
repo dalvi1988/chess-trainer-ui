@@ -1,0 +1,46 @@
+.eval-container {
+  width: 40px;
+  height: 300px;
+  background: #1e1e1e;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+.eval-fill {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(to top, #ffffff, #e0e0e0);
+  transition: height 0.25s ease-in-out;
+}
+
+.eval-container.black .eval-fill {
+  top: 0;
+  bottom: auto;
+  background: linear-gradient(to bottom, #ffffff, #e0e0e0);
+}
+
+.eval-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+:host {
+  display: flex;
+  height: 100%; /* CRITICAL */
+}
+
+.eval-container {
+  background: #1e1e1e;
+  border: 1px solid #ccc; /* subtle outline */
+  border-radius: 6px;
+  height: 100%;
+  overflow: hidden;
+}

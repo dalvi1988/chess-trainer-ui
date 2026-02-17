@@ -42,8 +42,17 @@
     }
   </div>
 
-  <!-- RIGHT: BOARD -->
-  <div class="board-container">
-    <div id="board" class="board"></div>
+  <!-- RIGHT SIDE: BOARD + EVAL BAR TOGETHER -->
+  <div class="board-and-bar">
+    <div class="board-wrapper">
+      <div id="board" class="board"></div>
+    </div>
+
+    <app-evaluation-bar
+      class="eval-bar"
+      [evalCp]="evalCp"
+      [evalMate]="evalMate"
+      [orientation]="orientation"
+    ></app-evaluation-bar>
   </div>
 </div>

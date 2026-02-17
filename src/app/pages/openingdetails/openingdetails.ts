@@ -11,11 +11,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { VariationCompleteDialog } from '../variation-complete-dialog/variation-complete-dialog';
 import { FormsModule } from '@angular/forms';
 import { PromotionDialogComponent } from '../promotion-dialog/promotion-dialog';
-
+import { EvaluationBarComponent } from '../evaluation-bar/evaluation-bar';
 @Component({
   selector: 'app-openingdetails',
   standalone: true,
-  imports: [FormsModule, MatCardModule],
+  imports: [FormsModule, MatCardModule, EvaluationBarComponent],
   templateUrl: './openingdetails.html',
   styleUrl: './openingdetails.css',
 })
@@ -30,14 +30,18 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
   variationCompleted = false;
   showCompletionPanel = false;
   selectedVariationId: number | null = null;
-
+  evalCp: number | null = null;
+  evalMate: number | null = null;
+  orientation: 'white' | 'black' = 'white';
   shapes: any[] = [];
   private openingSub?: Subscription;
+  stockfish!: Worker;
+  evalPercent = 50; // 0 = black winning, 100 = white winning
+  evalDisplay = '0.0'; // text shown in the middle
 
   constructor(
     private route: ActivatedRoute,
     private openingsService: OpeningsService,
-    private stockfishService: StockfishService,
     private dialog: MatDialog,
   ) {}
 
@@ -46,6 +50,7 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
 
     this.openingSub = this.openingsService.getByName(openingName).subscribe((data: Opening) => {
       this.opening = data;
+      this.orientation = this.opening.side?.toLowerCase().trim() === 'black' ? 'black' : 'white';
 
       if (this.opening.variations?.length > 0) {
         const first = this.opening.variations[0];
@@ -56,8 +61,60 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
         this.onVariationSelect({ target: { value: first.id } });
       }
     });
-  }
 
+    // Create the Stockfish worker
+    this.stockfish = new Worker('/assets/stockfish/stockfish.worker.js', {
+      type: 'classic',
+    });
+
+    this.stockfish.onmessage = (e) => {
+      const line = e.data;
+
+      if (line.includes('score mate')) {
+        const parts = line.split(' ');
+        const idx = parts.indexOf('mate');
+        this.evalMate = parseInt(parts[idx + 1], 10);
+        this.evalCp = null;
+        return;
+      }
+
+      if (line.includes('score cp')) {
+        const parts = line.split(' ');
+        const idx = parts.indexOf('cp');
+        this.evalCp = parseInt(parts[idx + 1], 10);
+        this.evalMate = null;
+      }
+      if (line.includes('info depth')) {
+        this.parseEvaluation(line);
+      }
+    };
+
+    this.stockfish.postMessage('uci');
+    this.stockfish.postMessage('isready');
+  }
+  private parseEvaluation(line: string) {
+    // Example Stockfish output:
+    // "info depth 15 score cp -23 ..."
+    // "info depth 15 score mate 3 ..."
+
+    if (line.includes('score cp')) {
+      const cp = parseInt(line.split('score cp')[1].split(' ')[1], 10);
+      console.log('Centipawn:', cp);
+
+      const winChance = this.cpToWinChance(cp);
+      console.log('Winning Chance:', winChance + '%');
+    }
+
+    if (line.includes('score mate')) {
+      const mate = parseInt(line.split('score mate')[1].split(' ')[1], 10);
+      console.log('Mate in:', mate);
+    }
+  }
+  private cpToWinChance(cp: number): number {
+    // logistic curve used by Lichess
+    const winChance = 50 + 50 * (2 / (1 + Math.exp(-0.00368208 * cp)) - 1);
+    return Math.round(winChance);
+  }
   ngAfterViewInit() {
     const element = document.getElementById('board');
     if (!element) {
@@ -67,53 +124,40 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
 
     this.board = Chessground(element, {
       fen: this.chess.fen(),
-      draggable: { enabled: true },
+
+      movable: {
+        free: true, // allow free dragging
+        color: 'both', // both sides can move
+        events: {
+          after: (from: string, to: string) => this.onMove(from, to),
+        },
+      },
+
+      events: {
+        select: (square: string) => this.onSelect(square),
+      },
+
       drawable: {
         enabled: true,
         visible: true,
         brushes: {
-          green: {
-            key: 'green',
-            color: '#15781B',
-            opacity: 0.5,
-            lineWidth: 10,
-          },
-          red: {
-            key: 'red',
-            color: '#882020',
-            opacity: 0.5,
-            lineWidth: 10,
-          },
-          blue: {
-            key: 'blue',
-            color: '#003088',
-            opacity: 0.5,
-            lineWidth: 10,
-          },
-          yellow: {
-            key: 'yellow',
-            color: '#e68f00',
-            opacity: 0.5,
-            lineWidth: 10,
-          },
-          correct: {
-            key: 'correct',
-            color: '#4caf50',
-            opacity: 0.5,
-            lineWidth: 10,
-          },
-          wrong: {
-            key: 'wrong',
-            color: '#f44336',
-            opacity: 0.5,
-            lineWidth: 10,
-          },
+          green: { key: 'green', color: '#15781B', opacity: 0.5, lineWidth: 10 },
+          red: { key: 'red', color: '#882020', opacity: 0.5, lineWidth: 10 },
+          blue: { key: 'blue', color: '#003088', opacity: 0.5, lineWidth: 10 },
+          yellow: { key: 'yellow', color: '#e68f00', opacity: 0.5, lineWidth: 10 },
+          correct: { key: 'correct', color: '#4caf50', opacity: 0.5, lineWidth: 10 },
+          wrong: { key: 'wrong', color: '#f44336', opacity: 0.5, lineWidth: 10 },
         },
         shapes: [],
       },
-      events: {
-        move: (from: string, to: string) => this.onMove(from, to),
-        select: (square: string) => this.onSelect(square),
+
+      highlight: {
+        lastMove: true,
+        check: true,
+      },
+
+      animation: {
+        enabled: true,
       },
     });
 
@@ -149,6 +193,7 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
   private highlightPair(from: string, to: string, brush: string) {
     this.shapes.push({ orig: from as any, brush }, { orig: to as any, brush });
   }
+  private evalTimeout: any;
 
   private updateBoard() {
     if (!this.board) return;
@@ -159,6 +204,21 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
         shapes: [...this.shapes],
       },
     });
+    // Ask Stockfish to evaluate
+    // Debounce Stockfish evaluation
+    if (this.currentMoveIndex < this.variationMoves.length - 1) {
+      console.log(
+        'evaltingggggggg' + this.variationMoves.length + 'current index: ' + this.currentMoveIndex,
+      );
+      clearTimeout(this.evalTimeout);
+      this.evalTimeout = setTimeout(() => {
+        console.log('Evaluating FEN:', this.chess.fen());
+
+        this.evaluatePosition(this.chess.fen());
+      }, 150); // 150ms is perfect
+    } else {
+      console.log('No more moves to eval, skipping Stockfish call.');
+    }
   }
 
   private autoPlayNextMove(delayMs = 600) {
@@ -215,6 +275,7 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
     if (!this.selectedVariation) return;
 
     const side = this.opening.side?.toLowerCase().trim() === 'black' ? 'black' : 'white';
+    this.orientation = side;
 
     this.board.set({ orientation: side, lastMove: [] });
 
@@ -406,7 +467,7 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
       (piece.color === 'w' && targetRank === '8') || (piece.color === 'b' && targetRank === '1')
     );
   }
-
+  private completionTimeout: any;
   private handleMoveResult(move: any, from: string, to: string) {
     const expected = this.variationMoves[this.currentMoveIndex];
 
@@ -422,6 +483,7 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
       this.clearShapes('wrong');
       this.clearShapes('yellow');
       this.clearShapes('correct');
+      this.clearShapes('blue');
       this.highlightPair(from, to, 'correct');
 
       this.currentMoveIndex++;
@@ -431,6 +493,9 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
       }
 
       this.updateBoard();
+
+      // Delay completion dialog slightly so board can render
+      clearTimeout(this.completionTimeout);
 
       if (this.currentMoveIndex >= this.variationMoves.length) {
         this.openCompletionDialog();
@@ -446,5 +511,10 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
 
     this.chess.undo();
     this.updateBoard();
+  }
+
+  evaluatePosition(fen: string) {
+    this.stockfish.postMessage(`position fen ${fen}`);
+    this.stockfish.postMessage('go depth 15');
   }
 }
