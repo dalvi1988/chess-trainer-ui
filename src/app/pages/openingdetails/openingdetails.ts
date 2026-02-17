@@ -12,6 +12,8 @@ import { VariationCompleteDialog } from '../variation-complete-dialog/variation-
 import { FormsModule } from '@angular/forms';
 import { PromotionDialogComponent } from '../promotion-dialog/promotion-dialog';
 import { EvaluationBarComponent } from '../evaluation-bar/evaluation-bar';
+import { Meta, Title } from '@angular/platform-browser';
+
 @Component({
   selector: 'app-openingdetails',
   standalone: true,
@@ -43,6 +45,8 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
     private route: ActivatedRoute,
     private openingsService: OpeningsService,
     private dialog: MatDialog,
+    private meta: Meta,
+    private title: Title,
   ) {}
 
   ngOnInit() {
@@ -52,17 +56,42 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
       this.opening = data;
       this.orientation = this.opening.side?.toLowerCase().trim() === 'black' ? 'black' : 'white';
 
+      // ⭐⭐⭐ SEO: Dynamic Title + Meta Description
+      this.title.setTitle(`${this.opening.name} – Chess Opening Guide`);
+      this.meta.updateTag({
+        name: 'description',
+        content: `${this.opening.name} explained with moves, ideas, traps, and variations. Learn how to play and counter this opening with interactive training.`,
+      });
+      this.meta.updateTag({
+        name: 'keywords',
+        content: `${this.opening.name}, chess opening, ${this.opening.side} openings, chess theory, ${this.opening.eco}`,
+      });
+
+      // ⭐ Optional: Structured Data (helps Bing/Google understand the page)
+      const schema = {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: this.opening.name,
+        description: this.opening.description,
+        author: 'ChessLearningHub',
+        url: `https://chesslearninghub.com/openings/${this.opening.name}`,
+        keywords: `${this.opening.name}, chess opening, ${this.opening.eco}`,
+      };
+      this.meta.updateTag({
+        name: 'schema',
+        content: JSON.stringify(schema),
+      });
+
+      // ⭐ Variation selection logic (unchanged)
       if (this.opening.variations?.length > 0) {
         const first = this.opening.variations[0];
-
         this.selectedVariation = first;
-        this.selectedVariationId = first.id; // ⭐ dropdown updates
-
+        this.selectedVariationId = first.id;
         this.onVariationSelect(first);
       }
     });
 
-    // Create the Stockfish worker
+    // ⭐ Stockfish worker (unchanged)
     this.stockfish = new Worker('/assets/stockfish/stockfish.worker.js', {
       type: 'classic',
     });
@@ -84,6 +113,7 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
         this.evalCp = parseInt(parts[idx + 1], 10);
         this.evalMate = null;
       }
+
       if (line.includes('info depth')) {
         this.parseEvaluation(line);
       }
