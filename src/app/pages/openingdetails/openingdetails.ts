@@ -40,6 +40,7 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
   stockfish!: Worker;
   evalPercent = 50; // 0 = black winning, 100 = white winning
   evalDisplay = '0.0'; // text shown in the middle
+  boardReady = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -146,6 +147,7 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
     return Math.round(winChance);
   }
   ngAfterViewInit() {
+    alert('ngAfterViewInit');
     const element = document.getElementById('board');
     if (!element) {
       console.error('Board element not found');
@@ -192,6 +194,7 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
     });
 
     this.updateBoard();
+    this.boardReady = true;
   }
 
   ngOnDestroy() {
@@ -300,6 +303,13 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
   }
 
   onVariationSelect(line: any) {
+    if (!this.boardReady) {
+      // Delay execution until board is ready
+      setTimeout(() => this.onVariationSelect(line), 0);
+      return;
+    }
+
+    alert('onVariationSelect: ');
     this.selectedVariation = line;
     const id = line.id;
 
