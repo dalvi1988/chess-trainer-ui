@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { UserService } from '../../services/user.service';
+import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-login-success',
@@ -10,13 +10,13 @@ import { UserService } from '../../services/user.service';
 export class LoginSuccess implements OnInit {
   constructor(
     private http: HttpClient,
-    private userService: UserService,
+    private loginService: LoginService,
     private router: Router,
   ) {}
 
   ngOnInit() {
-    this.userService.loginSuccess().subscribe((user) => {
-      this.userService.setUser(user);
+    this.loginService.loginSuccess().subscribe((login) => {
+      this.loginService.setUser(login);
       this.router.navigate(['/']);
     });
   }

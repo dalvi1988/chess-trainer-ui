@@ -14,10 +14,13 @@
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
-  position: relative; /* needed for arrow */
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
 }
 
-/* ▼ DROPDOWN ARROW — the only new addition */
+/* ▼ DROPDOWN ARROW */
 .dropdown-selected::after {
   content: '▼';
   position: absolute;
@@ -29,6 +32,15 @@
   pointer-events: none;
 }
 
+/* SELECTED ITEM CONTENT */
+.selected-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+}
+
+/* DROPDOWN LIST */
 .dropdown-list {
   position: absolute;
   width: 100%;
@@ -43,11 +55,13 @@
   box-sizing: border-box;
 }
 
+/* EACH ITEM */
 .dropdown-item {
   padding: 8px 10px;
   border-bottom: 1px solid #333;
   display: flex;
-  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
@@ -57,6 +71,25 @@
   background: #2a2a2a;
 }
 
+/* Sequence number */
+.line-seq {
+  width: 22px;
+  text-align: right;
+  font-weight: 600;
+  color: #bbb;
+  opacity: 0.8;
+  flex-shrink: 0;
+}
+
+/* Wrapper for name + moves */
+.item-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Name */
 .line-name {
   font-weight: 600;
   color: white;
@@ -68,6 +101,7 @@
   text-overflow: ellipsis;
 }
 
+/* Moves */
 .line-moves {
   display: block;
   width: 100%;
@@ -81,13 +115,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* TOOLTIP WRAPPER */
-.tooltip {
-  position: relative;
-  display: inline-block;
-}
 
-/* TOOLTIP FOR NAME ONLY */
+/* Tooltip */
 .tooltip {
   position: relative;
   display: inline-block;

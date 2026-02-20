@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 
-import { UserService } from '../../services/user.service';
+import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -25,16 +25,18 @@ import { UserService } from '../../services/user.service';
 export class Toolbar implements OnInit {
   user: any = null;
 
-  constructor(private userService: UserService) {}
+  constructor(private loginService: LoginService) {}
 
   ngOnInit() {
-    this.userService.getUser().subscribe((u) => (this.user = u));
+    this.loginService.getUser().subscribe((u: any) => {
+      this.user = u;
+    });
   }
 
   logout() {
-    this.userService.setUser(null);
+    this.loginService.setUser(null);
 
-    this.userService.logout().subscribe({
+    this.loginService.logout().subscribe({
       next: () => (window.location.href = '/'),
       error: () => (window.location.href = '/'),
     });

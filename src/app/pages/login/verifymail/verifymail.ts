@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { UserService } from '../../../services/user.service';
+import { LoginService } from '../../../services/login.service';
 
 @Component({
   selector: 'app-verify-email',
@@ -14,7 +14,7 @@ export class VerifyEmail implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private auth: UserService,
+    private loginService: LoginService,
   ) {}
 
   ngOnInit(): void {
@@ -25,7 +25,7 @@ export class VerifyEmail implements OnInit {
       return;
     }
 
-    this.auth.verifyEmail(token).subscribe({
+    this.loginService.verifyEmail(token).subscribe({
       next: (res) => (this.message = res),
       error: (err) => (this.message = err.error?.text || err.error || 'Verification failed.'),
     });

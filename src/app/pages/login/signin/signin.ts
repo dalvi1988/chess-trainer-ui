@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { UserService } from '../../../services/user.service';
+import { LoginService } from '../../../services/login.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -13,10 +13,10 @@ export class SignIn {
   password = '';
   errorMessage = '';
 
-  constructor(private auth: UserService) {}
+  constructor(private loginService: LoginService) {}
 
   login() {
-    this.auth.login(this.email, this.password).subscribe({
+    this.loginService.login(this.email, this.password).subscribe({
       next: (res: string) => {
         window.location.href = '/'; // redirect to home
       },

@@ -18,6 +18,10 @@ export class LoginService {
     return this.user$.asObservable();
   }
 
+  getCurrentUser() {
+    return this.user$.getValue();
+  }
+
   // ⭐ Restore user session after page refresh
   autoLogin() {
     return this.http.get<any>(`${this.backendURL}/api/me`, {

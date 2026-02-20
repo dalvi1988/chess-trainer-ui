@@ -4,7 +4,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 
 import { Toolbar } from './pages/toolbar/toolbar';
-import { UserService } from './services/user.service';
+import { LoginService } from './services/login.service';
 
 @Component({
   selector: 'app-root',
@@ -14,13 +14,13 @@ import { UserService } from './services/user.service';
   styleUrl: './app.css',
 })
 export class App implements OnInit {
-  constructor(private userService: UserService) {}
+  constructor(private loginService: LoginService) {}
 
   ngOnInit() {
     // ⭐ Restore user session after refresh
-    this.userService.autoLogin().subscribe({
-      next: (user) => this.userService.setUser(user),
-      error: () => this.userService.setUser(null),
+    this.loginService.autoLogin().subscribe({
+      next: (user) => this.loginService.setUser(user),
+      error: () => this.loginService.setUser(null),
     });
   }
 

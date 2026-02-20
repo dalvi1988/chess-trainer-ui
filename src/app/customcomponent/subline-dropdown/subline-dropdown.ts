@@ -13,24 +13,21 @@ export class SublineDropdownComponent {
 
   open = false;
 
+  selectedIndex: number = 0;
+
   toggle() {
     this.open = !this.open;
   }
 
-  select(line: any) {
+  select(line: any, index: number) {
     this.selectedLine = line;
+    this.selectedIndex = index;
     this.lineSelected.emit(line);
     this.open = false;
   }
 
-  // ⭐ FIXED: handles both string and array safely
   shortMoves(moves: string | string[]): string {
     if (!moves) return '';
-
-    // Convert array → string
-    const text = Array.isArray(moves) ? moves.join(' ') : moves;
-
-    // Let CSS handle truncation — return full text
-    return text;
+    return Array.isArray(moves) ? moves.join(' ') : moves;
   }
 }

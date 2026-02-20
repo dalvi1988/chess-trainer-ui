@@ -14,7 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
-      <button mat-stroked-button color="warn" (click)="cancel()">Cancel</button>
+      <!-- <button mat-stroked-button color="warn" (click)="cancel()">Cancel</button> -->
       <button mat-raised-button color="primary" (click)="next()">Next Variation</button>
     </mat-dialog-actions>
   `,
@@ -26,7 +26,7 @@ export class VariationCompleteDialog {
     this.dialogRef.close('next');
   }
 
-  cancel() {
-    this.dialogRef.close('cancel');
-  }
+  // cancel() {
+  //   this.dialogRef.close('cancel');
+  // }
 }

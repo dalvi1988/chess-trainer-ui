@@ -14,9 +14,10 @@ export class UserProgressService {
    * Save completion of an opening variation
    */
   saveVariationCompletion(variationId: number | null): Observable<any> {
-    alert(`Saving completion for variation ${variationId}...`); // Debug alert
-    return this.http.post(`${this.backendURL}/variation`, {
-      variationId,
-    });
+    return this.http.post(
+      `${this.backendURL}/api/user/progress/variation`,
+      { variationId },
+      { withCredentials: true }, // <-- MUST be here
+    );
   }
 }

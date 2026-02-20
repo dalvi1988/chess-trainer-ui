@@ -13,6 +13,10 @@ import { FormsModule } from '@angular/forms';
 import { PromotionDialogComponent } from '../promotion-dialog/promotion-dialog';
 import { EvaluationBarComponent } from '../evaluation-bar/evaluation-bar';
 import { Meta, Title } from '@angular/platform-browser';
+import { LoginPromptDialogComponent } from '../login-prompt-dialog/login-prompt-dialog';
+import { UserProgressService } from '../../services/user-progress-service';
+import { Router } from '@angular/router';
+import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-openingdetails',
@@ -48,6 +52,9 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
     private dialog: MatDialog,
     private meta: Meta,
     private title: Title,
+    private userProgressService: UserProgressService,
+    private router: Router,
+    private loginService: LoginService,
   ) {}
 
   ngOnInit() {
@@ -147,7 +154,6 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
     return Math.round(winChance);
   }
   ngAfterViewInit() {
-    alert('ngAfterViewInit');
     const element = document.getElementById('board');
     if (!element) {
       console.error('Board element not found');
@@ -239,16 +245,16 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
     });
     // Ask Stockfish to evaluate only after MY move
     const sideToMove = this.chess.turn(); // 'w' or 'b'
-
-    if (sideToMove !== this.opening.side?.toLowerCase().trim().charAt(0)) {
-      console.log("Skipping eval — opponent's turn.");
-      return;
-    }
-
-    if (this.currentMoveIndex <= this.variationMoves.length - 1) {
+    console.log(
+      'Side to move:',
+      sideToMove,
+      'Opening side:',
+      this.opening.side?.toLowerCase().trim().charAt(0),
+    );
+    if (sideToMove === this.opening.side?.toLowerCase().trim().charAt(0)) {
       clearTimeout(this.evalTimeout);
       this.evalTimeout = setTimeout(() => {
-        console.log('Evaluating FEN: ' + sideToMove, this.chess.fen());
+        console.log('Evaluating FEN:: ' + sideToMove, this.chess.fen());
         this.evaluatePosition(this.chess.fen());
       }, 150);
     } else {
@@ -309,7 +315,6 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
       return;
     }
 
-    alert('onVariationSelect: ');
     this.selectedVariation = line;
     const id = line.id;
 
@@ -453,6 +458,7 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
       const next = variations[currentIndex + 1];
 
       this.selectedVariation = next;
+
       this.selectedVariationId = next.id; // ⭐ updates dropdown
 
       this.onVariationSelect(next);
@@ -472,6 +478,21 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
     // this.selectedVariation = null;
   }
   openCompletionDialog() {
+    const currentUser = this.loginService.getCurrentUser();
+
+    if (currentUser) {
+      // Logged-in → save first, then show dialog
+      this.userProgressService.saveVariationCompletion(this.selectedVariationId).subscribe({
+        next: () => this.showCompletionDialog(),
+        error: () => this.showCompletionDialog(),
+      });
+      return;
+    }
+
+    // Not logged in → show dialog first
+    this.showCompletionDialogWithSave();
+  }
+  private showCompletionDialog() {
     const dialogRef = this.dialog.open(VariationCompleteDialog, {
       width: '360px',
       disableClose: true,
@@ -479,13 +500,53 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result === 'next') {
-        this.loadNextVariation();
+      this.handleCompletionResult(result);
+    });
+  }
+  private showCompletionDialogWithSave() {
+    const dialogRef = this.dialog.open(VariationCompleteDialog, {
+      width: '360px',
+      disableClose: true,
+      autoFocus: false,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      this.userProgressService.saveVariationCompletion(this.selectedVariationId).subscribe({
+        next: () => this.handleCompletionResult(result),
+        error: (err) => {
+          if (err.status === 401) {
+            this.openLoginPromptDialog(result);
+          } else {
+            this.handleCompletionResult(result);
+          }
+        },
+      });
+    });
+  }
+
+  handleCompletionResult(result: string | null) {
+    if (result === 'next') {
+      this.loadNextVariation();
+    } else {
+      this.cancelVariation();
+    }
+  }
+  openLoginPromptDialog(result: string) {
+    const dialogRef = this.dialog.open(LoginPromptDialogComponent, {
+      width: '320px',
+      disableClose: false,
+    });
+
+    dialogRef.afterClosed().subscribe((choice) => {
+      if (choice === 'login') {
+        const returnUrl = this.router.url; // <-- capture current page
+        this.router.navigate(['/login'], { queryParams: { returnUrl } });
       } else {
-        this.cancelVariation();
+        this.handleCompletionResult(result);
       }
     });
   }
+
   openPromotionDialog(from: string, to: string) {
     const dialogRef = this.dialog.open(PromotionDialogComponent, {
       width: '300px',

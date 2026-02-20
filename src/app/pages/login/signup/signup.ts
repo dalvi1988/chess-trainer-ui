@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { UserService } from '../../../services/user.service';
+import { LoginService } from '../../../services/login.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -15,13 +15,13 @@ export class Signup {
   message = '';
   error = '';
 
-  constructor(private auth: UserService) {}
+  constructor(private loginService: LoginService) {}
 
   signup() {
     this.error = '';
     this.message = '';
 
-    this.auth.signup(this.name, this.email, this.password).subscribe({
+    this.loginService.signup(this.name, this.email, this.password).subscribe({
       next: (res: string) => {
         this.message = res;
       },
