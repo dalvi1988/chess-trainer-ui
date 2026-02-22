@@ -45,6 +45,7 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
   evalPercent = 50; // 0 = black winning, 100 = white winning
   evalDisplay = '0.0'; // text shown in the middle
   boardReady = false;
+  completedVariationIds: number[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -62,6 +63,15 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
 
     this.openingSub = this.openingsService.getByName(openingName).subscribe((data: Opening) => {
       this.opening = data;
+      const currentUser = this.loginService.getCurrentUser();
+
+      if (currentUser) {
+        // Logged-in → save first, then show dialog
+        this.userProgressService.getCompletedVariationIds().subscribe((ids) => {
+          this.completedVariationIds = ids;
+          console.log('completdID' + this.completedVariationIds);
+        });
+      }
       this.orientation = this.opening.side?.toLowerCase().trim() === 'black' ? 'black' : 'white';
 
       // ⭐⭐⭐ SEO: Dynamic Title + Meta Description
@@ -316,12 +326,9 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
     }
 
     this.selectedVariation = line;
-    const id = line.id;
+    this.selectedVariationId = line.id;
 
     this.chess.reset();
-
-    this.selectedVariation =
-      this.opening.variations.find((v: OpeningVariation) => v.id === id) || null;
 
     if (!this.selectedVariation) return;
 
@@ -483,7 +490,15 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
     if (currentUser) {
       // Logged-in → save first, then show dialog
       this.userProgressService.saveVariationCompletion(this.selectedVariationId).subscribe({
-        next: () => this.showCompletionDialog(),
+        next: () => {
+          // ⭐ Add the completed variation ID to the list
+          if (this.selectedVariationId !== null) {
+            if (!this.completedVariationIds.includes(this.selectedVariationId)) {
+              this.completedVariationIds.push(this.selectedVariationId);
+            }
+          }
+          this.showCompletionDialog();
+        },
         error: () => this.showCompletionDialog(),
       });
       return;
@@ -512,7 +527,16 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((result) => {
       this.userProgressService.saveVariationCompletion(this.selectedVariationId).subscribe({
-        next: () => this.handleCompletionResult(result),
+        next: () => {
+          // ⭐ Add the completed variation ID to the list
+          if (this.selectedVariationId !== null) {
+            if (!this.completedVariationIds.includes(this.selectedVariationId)) {
+              this.completedVariationIds.push(this.selectedVariationId);
+            }
+          }
+
+          this.handleCompletionResult(result);
+        },
         error: (err) => {
           if (err.status === 401) {
             this.openLoginPromptDialog(result);

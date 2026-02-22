@@ -9,11 +9,13 @@ export class SublineDropdownComponent {
   @Input() subLines: any[] = [];
   @Input() selectedLine: any = null;
 
+  // NEW: Completed variation IDs
+  @Input() completedIds: number[] = [];
+
   @Output() lineSelected = new EventEmitter<any>();
 
   open = false;
-
-  selectedIndex: number = 0;
+  selectedIndex = 0;
 
   toggle() {
     this.open = !this.open;
@@ -29,5 +31,11 @@ export class SublineDropdownComponent {
   shortMoves(moves: string | string[]): string {
     if (!moves) return '';
     return Array.isArray(moves) ? moves.join(' ') : moves;
+  }
+
+  // NEW: Check if variation is completed
+  isCompleted(id: number | null | undefined): boolean {
+    if (!id) return false;
+    return this.completedIds.includes(id);
   }
 }

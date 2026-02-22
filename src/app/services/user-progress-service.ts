@@ -15,9 +15,21 @@ export class UserProgressService {
    */
   saveVariationCompletion(variationId: number | null): Observable<any> {
     return this.http.post(
-      `${this.backendURL}/api/user/progress/variation`,
+      `${this.backendURL}/api/user/progress/saveVariation`,
       { variationId },
-      { withCredentials: true }, // <-- MUST be here
+      { withCredentials: true },
+    );
+  }
+
+  /**
+   * Fetch all completed variation IDs for the logged‑in user
+   */
+  getCompletedVariationIds(): Observable<number[]> {
+    return this.http.get<number[]>(
+      `${this.backendURL}/api/user/progress/getCompletedVariationIds`,
+      {
+        withCredentials: true,
+      },
     );
   }
 }

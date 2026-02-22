@@ -1,10 +1,8 @@
 <div class="dropdown-container">
   <!-- SELECTED ITEM -->
   <div class="dropdown-selected" (click)="toggle()">
-    <!-- Sequence number -->
     <div class="line-seq">{{ selectedIndex + 1 }}.</div>
 
-    <!-- Name + Moves -->
     <div class="selected-content">
       <div class="line-name">
         {{ selectedLine?.name }}
@@ -16,6 +14,10 @@
         </div>
       </div>
     </div>
+
+    @if (isCompleted(selectedLine?.id)) {
+      <div class="completed-icon">✔</div>
+    }
   </div>
 
   <!-- DROPDOWN LIST -->
@@ -23,21 +25,19 @@
     <div class="dropdown-list">
       @for (line of subLines; track line.id; let i = $index) {
         <div class="dropdown-item" (click)="select(line, i)">
-          <!-- Sequence number -->
           <div class="line-seq">{{ i + 1 }}.</div>
 
-          <!-- Name + Moves -->
           <div class="item-content">
-            <div class="line-name">
-              {{ line.name }}
-            </div>
+            <div class="line-name">{{ line.name }}</div>
 
             <div class="tooltip" [attr.data-full]="shortMoves(line.moves)">
-              <div class="line-moves">
-                {{ shortMoves(line.moves) }}
-              </div>
+              <div class="line-moves">{{ shortMoves(line.moves) }}</div>
             </div>
           </div>
+
+          @if (isCompleted(line.id)) {
+            <div class="completed-icon">✔</div>
+          }
         </div>
       }
     </div>

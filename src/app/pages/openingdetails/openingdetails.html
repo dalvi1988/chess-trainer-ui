@@ -17,6 +17,7 @@
       <app-subline-dropdown
         [subLines]="opening.variations"
         [selectedLine]="selectedVariation"
+        [completedIds]="completedVariationIds"
         (lineSelected)="onVariationSelect($event)"
       ></app-subline-dropdown>
 

@@ -138,3 +138,14 @@
   font-size: 0.75rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
 }
+.dropdown-item {
+  display: flex;
+  align-items: center;
+}
+
+.completed-icon {
+  margin-left: auto;
+  color: #00a94b !important; /* force green */
+  font-size: 1.2rem;
+  font-weight: bold;
+}
