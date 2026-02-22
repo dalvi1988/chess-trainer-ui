@@ -23,7 +23,7 @@
       class="opening-card"
       [ngClass]="{
         'black-card': opening.side === 'black',
-        'disabled-card': !opening.variations || opening.variations.length === 0,
+        'disabled-card': opening.isActive === false,
       }"
       [routerLink]="['/openings', opening.name]"
     >
@@ -54,7 +54,7 @@
           {{ opening.description }}
         </div>
 
-        @if (!opening.variations || opening.variations.length === 0) {
+        @if (opening.isActive === false) {
           <div class="coming-soon">Coming Soon</div>
         }
       </div>
