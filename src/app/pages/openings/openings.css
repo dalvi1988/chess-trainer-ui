@@ -9,7 +9,7 @@
   font-size: 16px;
 }
 
-/* CARD — fixed height so 60/40 works */
+/* CARD */
 .opening-card {
   background: #ffffff;
   border: 1px solid #e5e7eb;
@@ -18,7 +18,7 @@
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  height: 360px; /* adjust if needed */
+  height: 360px; /* desktop default */
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease;
@@ -30,7 +30,7 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
 }
 
-/* IMAGE — 60% of card height */
+/* IMAGE */
 .opening-thumb {
   flex: 0 0 50%;
   width: 100%;
@@ -38,7 +38,7 @@
   display: block;
 }
 
-/* CONTENT — 40% of card height */
+/* CONTENT */
 .card-content {
   flex: 0 0 50%;
   padding: 14px;
@@ -151,4 +151,71 @@
   color: white;
   border-color: #3f51b5;
   font-weight: bold;
+}
+
+/* -------------------------------------------------- */
+/* MOBILE VIEW — ONLY IMAGE + TITLE */
+/* -------------------------------------------------- */
+@media (max-width: 768px) {
+  .opening-card {
+    height: auto; /* allow natural height */
+  }
+
+  .opening-thumb {
+    flex: none;
+    height: auto;
+  }
+
+  .card-content {
+    padding: 10px 12px;
+  }
+
+  /* Hide everything except title */
+  .card-description,
+  .card-side,
+  .coming-soon {
+    display: none !important;
+  }
+}
+
+/* -------------------------------------------------- */
+/* DESKTOP/TABLET — REDUCE IMAGE, KEEP FULL CONTENT */
+@media (max-width: 768px) {
+  .opening-card {
+    height: auto;
+  }
+
+  .opening-thumb {
+    width: 100%;
+    aspect-ratio: 1 / 1; /* square image */
+    object-fit: cover;
+  }
+
+  .card-content {
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  /* Show title + side label */
+  .card-title {
+    font-size: 18px;
+  }
+
+  /* Hide description + badge */
+  .card-description,
+  .coming-soon {
+    display: none !important;
+  }
+}
+/* DESCRIPTION — SMALLER ON ALL DEVICES */
+.card-description {
+  font-size: 13px; /* smaller everywhere */
+  line-height: 1.25; /* tighter */
+  color: #6b7280; /* lighter grey */
+  display: -webkit-box; /* limit lines */
+  -webkit-line-clamp: 2; /* show only 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
