@@ -17,6 +17,7 @@ import { LoginPromptDialogComponent } from '../login-prompt-dialog/login-prompt-
 import { UserProgressService } from '../../services/user-progress-service';
 import { Router } from '@angular/router';
 import { LoginService } from '../../services/login.service';
+import { StockfishService } from '../../services/stockfish-service';
 
 @Component({
   selector: 'app-openingdetails',
@@ -46,6 +47,7 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
   evalDisplay = '0.0'; // text shown in the middle
   boardReady = false;
   completedVariationIds: number[] = [];
+  evalScore: number | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -56,6 +58,7 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
     private userProgressService: UserProgressService,
     private router: Router,
     private loginService: LoginService,
+    private stockfishService: StockfishService,
   ) {}
 
   ngOnInit() {
@@ -108,61 +111,8 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
         this.onVariationSelect(first);
       }
     });
-
-    // ⭐ Stockfish worker (unchanged)
-    this.stockfish = new Worker('/assets/stockfish/stockfish.worker.js', {
-      type: 'classic',
-    });
-
-    this.stockfish.onmessage = (e) => {
-      const line = e.data;
-
-      if (line.includes('score mate')) {
-        const parts = line.split(' ');
-        const idx = parts.indexOf('mate');
-        this.evalMate = parseInt(parts[idx + 1], 10);
-        this.evalCp = null;
-        return;
-      }
-
-      if (line.includes('score cp')) {
-        const parts = line.split(' ');
-        const idx = parts.indexOf('cp');
-        this.evalCp = parseInt(parts[idx + 1], 10);
-        this.evalMate = null;
-      }
-
-      if (line.includes('info depth')) {
-        this.parseEvaluation(line);
-      }
-    };
-
-    this.stockfish.postMessage('uci');
-    this.stockfish.postMessage('isready');
   }
-  private parseEvaluation(line: string) {
-    // Example Stockfish output:
-    // "info depth 15 score cp -23 ..."
-    // "info depth 15 score mate 3 ..."
 
-    if (line.includes('score cp')) {
-      const cp = parseInt(line.split('score cp')[1].split(' ')[1], 10);
-      console.log('Centipawn:', cp);
-
-      const winChance = this.cpToWinChance(cp);
-      console.log('Winning Chance:', winChance + '%');
-    }
-
-    if (line.includes('score mate')) {
-      const mate = parseInt(line.split('score mate')[1].split(' ')[1], 10);
-      console.log('Mate in:', mate);
-    }
-  }
-  private cpToWinChance(cp: number): number {
-    // logistic curve used by Lichess
-    const winChance = 50 + 50 * (2 / (1 + Math.exp(-0.00368208 * cp)) - 1);
-    return Math.round(winChance);
-  }
   ngAfterViewInit() {
     const element = document.getElementById('board');
     if (!element) {
@@ -270,6 +220,18 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
     } else {
       console.log('No more moves to eval, skipping Stockfish call.');
     }
+  }
+  evaluatePosition(fen: string) {
+    this.stockfishService.evaluatePosition(fen, (score) => {
+      // Mate detection (your service uses ±100)
+      if (Math.abs(score) === 100) {
+        this.evalMate = score > 0 ? 1 : -1; // M1 or M-1 style
+        this.evalCp = null;
+      } else {
+        this.evalMate = null;
+        this.evalCp = Math.round(score * 100); // convert back to centipawns
+      }
+    });
   }
 
   private autoPlayNextMove(delayMs = 600) {
@@ -642,10 +604,5 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
 
     this.chess.undo();
     this.updateBoard();
-  }
-
-  evaluatePosition(fen: string) {
-    this.stockfish.postMessage(`position fen ${fen}`);
-    this.stockfish.postMessage('go depth 15');
   }
 }
