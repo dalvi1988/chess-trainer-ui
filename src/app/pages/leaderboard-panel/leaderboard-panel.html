@@ -1,0 +1,33 @@
+<div class="leaderboard">
+  <!-- Header -->
+  <h3 class="leaderboard-title">Leaderboard</h3>
+
+  <!-- Tabs -->
+  <div class="leaderboard-tabs">
+    <div class="tab" [class.active]="selected === 'daily'" (click)="selected = 'daily'">Daily</div>
+    <div class="tab" [class.active]="selected === 'all'" (click)="selected = 'all'">All‑Time</div>
+  </div>
+
+  <!-- List -->
+  <div class="leaderboard-list">
+    <!-- DAILY -->
+    @if (selected === 'daily') {
+      @for (user of daily$ | async; track user.name) {
+        <div class="leader-item" [class.me]="user.isCurrentUser">
+          <span class="user-name">{{ user.name }}</span>
+          <span class="user-score">{{ user.dailyStreak }}</span>
+        </div>
+      }
+    }
+
+    <!-- ALL‑TIME -->
+    @if (selected === 'all') {
+      @for (user of allTime$ | async; track user.name) {
+        <div class="leader-item" [class.me]="user.isCurrentUser">
+          <span class="user-name">{{ user.name }}</span>
+          <span class="user-score">{{ user.allTimeStreak }}</span>
+        </div>
+      }
+    }
+  </div>
+</div>

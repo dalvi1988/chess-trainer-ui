@@ -8,6 +8,7 @@ import { AuthGuard } from './guards/auths.guard';
 import { SignIn } from './pages/login/signin/signin';
 import { Signup } from './pages/login/signup/signup';
 import { VerifyEmail } from './pages/login/verifymail/verifymail';
+import { DrillPageComponent } from './pages/drill/drill';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -18,4 +19,5 @@ export const routes: Routes = [
   { path: 'openings', component: Openings },
   { path: 'signup', component: Signup },
   { path: 'verify-email', component: VerifyEmail },
+  { path: 'drill/:id', component: DrillPageComponent },
 ];

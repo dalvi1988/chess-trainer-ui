@@ -1,0 +1,58 @@
+<div class="drill-layout">
+  <!-- LEFT PANEL -->
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <!-- Opening Details -->
+    <div class="opening-details">
+      <div class="opening-name">
+        {{ currentVariation?.openingName }}
+      </div>
+
+      @if (currentVariation?.openingEco) {
+        <div class="opening-eco">ECO: {{ currentVariation.openingEco }}</div>
+      }
+
+      @if (currentVariation?.openingSide) {
+        <div class="opening-side">Side: {{ currentVariation.openingSide }}</div>
+      }
+
+      @if (currentVariation?.openingDescription) {
+        <div class="opening-description">
+          {{ currentVariation.openingDescription }}
+        </div>
+      }
+
+      <div class="variation-name">Variation: {{ currentVariation?.name }}</div>
+
+      <div class="progress-badge">{{ currentIndex + 1 }} / {{ variations.length }}</div>
+    </div>
+
+    <!-- Leaderboard -->
+    <leaderboard-panel></leaderboard-panel>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <!-- FEEDBACK POPUP -->
+    <feedback-popup [message]="popupMessage" [type]="popupType" [visible]="showPopup">
+    </feedback-popup>
+
+    <div class="board-and-bar">
+      <div class="board-container">
+        <div id="board" class="board"></div>
+      </div>
+
+      <!-- <app-evaluation-bar
+        class="eval-bar"
+        [evalCp]="evalCp"
+        [evalMate]="evalMate"
+        [orientation]="orientation"
+      >
+      </app-evaluation-bar> -->
+    </div>
+
+    <div class="move-indicator">
+      {{ nextMoveText }}
+    </div>
+  </div>
+</div>

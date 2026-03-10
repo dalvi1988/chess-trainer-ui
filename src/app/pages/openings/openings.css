@@ -1,4 +1,17 @@
-/* SEARCH BOX */
+/* =========================================================
+   PAGE LAYOUT
+   ========================================================= */
+h1 {
+  margin-bottom: 8px;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+p {
+  margin-top: 0;
+  color: #555;
+}
+
 .search-box {
   width: 100%;
   max-width: 400px;
@@ -9,213 +22,218 @@
   font-size: 16px;
 }
 
-/* CARD */
-.opening-card {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
-  overflow: hidden;
+/* =========================================================
+   SIDE FILTER BUTTONS
+   ========================================================= */
+.side-toggle {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.toggle-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #f5f5f5;
   cursor: pointer;
+  font-weight: 600;
+}
+
+.toggle-btn.active {
+  background: #4a90e2;
+  color: white;
+  border-color: #4a90e2;
+}
+
+/* =========================================================
+   OPENINGS GRID
+   ========================================================= */
+.openings-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+/* =========================================================
+   OPENING CARD BASE STYLE
+   ========================================================= */
+.opening-card {
+  border-radius: 10px;
+  overflow: hidden;
+  transition: 0.2s ease;
+  border: 1px solid #ddd;
+  background: white;
+
+  /* ⭐ Compact but balanced */
+  min-height: 360px;
   display: flex;
   flex-direction: column;
-  height: 360px; /* desktop default */
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
 }
 
-/* HOVER EFFECT */
 .opening-card:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  transform: scale(1.03);
 }
 
-/* IMAGE */
+/* =========================================================
+   IMAGE (BIG + FILLS AREA PERFECTLY)
+   ========================================================= */
 .opening-thumb {
-  flex: 0 0 50%;
   width: 100%;
-  object-fit: cover;
-  display: block;
+  height: 270px; /* ⭐ Increased again */
+  object-fit: cover; /* ⭐ Fills area, no shrinking */
+  background: #f2f2f2;
 }
 
-/* CONTENT */
+/* =========================================================
+   CARD CONTENT (ULTRA COMPACT)
+   ========================================================= */
 .card-content {
-  flex: 0 0 50%;
-  padding: 14px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding: 4px 8px; /* ⭐ minimal */
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.card-side {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 2px;
+}
+
+.side-icon {
+  margin-right: 4px;
+}
+
+/* Disabled */
+.disabled-card {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.coming-soon {
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #b00;
+}
+
+/* =========================================================
+   ACTION BUTTONS (Learn + Drill)
+   ========================================================= */
+.actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.learn-btn,
+.drill-btn {
+  flex: 1;
+  padding: 5px 0; /* compact */
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.learn-btn {
+  background: #4a90e2;
+  color: white;
+}
+
+.learn-btn:hover {
+  background: #3a78c2;
+}
+
+.drill-btn {
+  background: #27ae60;
+  color: white;
+}
+
+.drill-btn:hover {
+  background: #1e8f4d;
+}
+
+.drill-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   RANDOM DRILL CARD (MATCHED TO NEW HEIGHT)
+   ========================================================= */
+.random-card {
+  border: 3px solid #ffcc00;
+  background: #fff8d1;
+  box-shadow: 0 0 12px rgba(255, 204, 0, 0.6);
+}
+
+.random-content {
+  text-align: center;
+  padding: 10px;
+
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-/* TITLE */
-.card-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #111827;
+.random-icon {
+  font-size: 42px;
+  margin-bottom: 4px;
 }
 
-/* SIDE LABEL */
-.card-side {
-  font-size: 14px;
-  font-weight: 500;
-  color: #6b7280;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.side-icon {
+.random-card .card-title {
   font-size: 18px;
+  font-weight: 700;
+  color: #b8860b;
 }
 
-/* DESCRIPTION */
-.card-description {
-  font-size: 15px;
-  color: #374151;
-  line-height: 1.4;
-  flex-grow: 1;
-}
-
-/* COMING SOON BADGE */
-.coming-soon {
-  margin-top: 6px;
-  padding: 4px 8px;
-  background: #ff9800;
-  color: white;
-  font-weight: bold;
-  border-radius: 4px;
-  display: inline-block;
-}
-
-/* DISABLED CARDS */
-.disabled-card {
-  opacity: 0.5;
-  pointer-events: none;
-  filter: grayscale(100%);
-}
-
-/* DARK THEME FOR BLACK OPENINGS */
-.black-card {
-  background: #111827 !important;
-  border: 1px solid #1f2937 !important;
-  color: white !important;
-}
-
-.black-card .card-title {
-  color: #f9fafb !important;
-}
-
-.black-card .card-side {
-  color: #d1d5db !important;
-}
-
-.black-card .card-description {
-  color: #e5e7eb !important;
-}
-
-.black-card:hover {
-  box-shadow: 0 10px 25px rgba(255, 255, 255, 0.15) !important;
-}
-
-/* GRID */
-.openings-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 22px;
-  margin-top: 20px;
-}
-
-/* SIDE FILTER BUTTONS */
-.side-toggle {
-  display: flex;
-  gap: 10px;
-  margin: 15px 0;
-}
-
-.toggle-btn {
-  padding: 6px 14px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  background: #f5f5f5;
-  cursor: pointer;
-  font-size: 14px;
+.random-card:hover {
+  transform: scale(1.03);
   transition: 0.2s ease;
 }
 
-.toggle-btn:hover {
-  background: #e8e8e8;
-}
-
-.toggle-btn.active {
-  background: #3f51b5;
-  color: white;
-  border-color: #3f51b5;
-  font-weight: bold;
-}
-
-/* -------------------------------------------------- */
-/* MOBILE VIEW — ONLY IMAGE + TITLE */
-/* -------------------------------------------------- */
+/* =========================================================
+   MOBILE
+   ========================================================= */
 @media (max-width: 768px) {
-  .opening-card {
-    height: auto; /* allow natural height */
+  .openings-container {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   }
 
   .opening-thumb {
-    flex: none;
-    height: auto;
+    height: 200px;
   }
 
-  .card-content {
-    padding: 10px 12px;
-  }
-
-  /* Hide everything except title */
-  .card-description,
-  .card-side,
-  .coming-soon {
-    display: none !important;
-  }
-}
-
-/* -------------------------------------------------- */
-/* DESKTOP/TABLET — REDUCE IMAGE, KEEP FULL CONTENT */
-@media (max-width: 768px) {
-  .opening-card {
-    height: auto;
-  }
-
-  .opening-thumb {
-    width: 100%;
-    aspect-ratio: 1 / 1; /* square image */
-    object-fit: cover;
-  }
-
-  .card-content {
-    padding: 10px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  /* Show title + side label */
   .card-title {
-    font-size: 18px;
-  }
-
-  /* Hide description + badge */
-  .card-description,
-  .coming-soon {
-    display: none !important;
+    font-size: 15px;
   }
 }
-/* DESCRIPTION — SMALLER ON ALL DEVICES */
-.card-description {
-  font-size: 13px; /* smaller everywhere */
-  line-height: 1.25; /* tighter */
-  color: #6b7280; /* lighter grey */
-  display: -webkit-box; /* limit lines */
-  -webkit-line-clamp: 2; /* show only 2 lines */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+/* DRILL PAGE HEADER */
+.drill-header {
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.drill-dice {
+  font-size: 70px; /* ⭐ Bigger dice */
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.drill-title {
+  font-size: 26px;
+  font-weight: 700;
 }

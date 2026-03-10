@@ -1,32 +1,44 @@
-.app-toolbar {
+/* GLOBAL */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* page itself never scrolls */
+}
+
+/* ROOT */
+app-root {
+  height: 100%;
   display: flex;
+  flex-direction: column;
+}
+
+/* FIXED TOOLBAR */
+app-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 56px;
+  display: flex;
+  align-items: center;
   justify-content: space-between;
+
   padding: 0 16px;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+  z-index: 1000;
 }
 
-.toolbar-left {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.toolbar-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.app-title {
-  font-size: 20px;
-  font-weight: 600;
-  margin-right: 24px;
-}
-
+/* CONTENT AREA BELOW TOOLBAR */
 .app-content {
-  padding: 24px;
-}
+  position: absolute;
+  top: 56px;
+  left: 0;
+  right: 0;
+  bottom: 0;
 
-.login-btn {
-  font-weight: 600;
-  text-transform: none;
+  overflow-y: auto; /* DEFAULT: pages can scroll */
 }

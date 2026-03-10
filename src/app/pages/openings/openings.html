@@ -18,6 +18,22 @@
 </div>
 
 <div class="openings-container">
+  <!-- ⭐ RANDOM DRILL CARD (No image, big dice icon) -->
+  <mat-card class="opening-card random-card" [routerLink]="['/drill/random']">
+    <div class="card-content random-content">
+      <div class="drill-header">
+        <div class="drill-dice">🎲</div>
+        <div class="drill-title">Random Drill</div>
+      </div>
+      <div class="card-description">Practice a random variation from any opening.</div>
+
+      <div class="actions">
+        <button class="drill-btn">Start Drill</button>
+      </div>
+    </div>
+  </mat-card>
+
+  <!-- ⭐ NORMAL OPENING CARDS -->
   @for (opening of filteredOpenings(); track opening.id) {
     <mat-card
       class="opening-card"
@@ -25,20 +41,16 @@
         'black-card': opening.side === 'black',
         'disabled-card': opening.isActive === false,
       }"
-      [routerLink]="['/openings', opening.name]"
     >
-      <!-- TOP IMAGE (60%) -->
+      <!-- IMAGE -->
       <img
         class="opening-thumb"
         [src]="'assets/openings/' + opening.name + '.jpg'"
         alt="{{ opening.name }}"
       />
 
-      <!-- CONTENT (40%) -->
       <div class="card-content">
-        <div class="card-title">
-          {{ opening.name }}
-        </div>
+        <div class="card-title">{{ opening.name }}</div>
 
         <div class="card-side">
           @if (opening.side === 'white') {
@@ -50,11 +62,20 @@
           {{ opening.side | titlecase }}
         </div>
 
-        <div class="card-description">
-          {{ opening.description }}
+        <!-- ⭐ ACTION BUTTONS -->
+        <div class="actions">
+          <button class="learn-btn" [routerLink]="['/openings', opening.name]">Learn</button>
+
+          <button
+            class="drill-btn"
+            [routerLink]="['/drill', opening.id]"
+            [disabled]="!opening.isActive"
+          >
+            Drill
+          </button>
         </div>
 
-        @if (opening.isActive === false) {
+        @if (!opening.isActive) {
           <div class="coming-soon">Coming Soon</div>
         }
       </div>

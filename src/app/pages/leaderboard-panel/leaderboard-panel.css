@@ -1,0 +1,64 @@
+.leaderboard {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.leaderboard-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Tabs */
+.leaderboard-tabs {
+  display: flex;
+  border-bottom: 2px solid #ddd;
+  gap: 20px;
+  padding-bottom: 6px;
+}
+
+.tab {
+  font-size: 15px;
+  font-weight: 600;
+  padding-bottom: 6px;
+  cursor: pointer;
+  color: #666;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.tab.active {
+  color: #000;
+  border-bottom: 3px solid #000;
+}
+
+/* List */
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.leader-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.user-name {
+  font-weight: 600;
+}
+
+.user-score {
+  font-weight: 700;
+  color: #333;
+}
+.leader-item.me {
+  background: #e8f3ff;
+  border-color: #4a90e2;
+  font-weight: 700;
+}

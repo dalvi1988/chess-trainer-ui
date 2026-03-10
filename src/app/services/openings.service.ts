@@ -19,13 +19,19 @@ export class OpeningsService {
     });
   }
 
+  getAllWithVariation(): Observable<Opening[]> {
+    return this.http.get<Opening[]>(`${this.api}/withVariation`, {
+      withCredentials: true,
+    });
+  }
+
   getById(id: number): Observable<Opening> {
-    return this.http.get<Opening>(`${this.api}/${id}`, {
+    return this.http.get<Opening>(`${this.api}/id/${id}`, {
       withCredentials: true,
     });
   }
   getByName(name: String): Observable<Opening> {
-    return this.http.get<Opening>(`${this.api}/${name}`, {
+    return this.http.get<Opening>(`${this.api}/name/${name}`, {
       withCredentials: true,
     });
   }

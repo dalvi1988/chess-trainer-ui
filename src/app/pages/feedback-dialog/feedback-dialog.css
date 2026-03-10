@@ -1,0 +1,41 @@
+.popup {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  opacity: 0;
+  animation: fadeInOut 0.9s ease;
+  z-index: 999;
+}
+
+.popup.right {
+  background: #4caf50;
+}
+
+.popup.wrong {
+  background: #e53935;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  80% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+}
