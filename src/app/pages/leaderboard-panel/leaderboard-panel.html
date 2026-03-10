@@ -30,4 +30,12 @@
       }
     }
   </div>
+  <!-- LOGIN BUTTON FOR GUEST USERS -->
+  @if (!isLoggedIn) {
+    <div class="login-cta">
+      <button class="login-btn" (click)="loginFromLeaderboard()">
+        Log in to join the leaderboard
+      </button>
+    </div>
+  }
 </div>

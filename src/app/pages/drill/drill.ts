@@ -178,7 +178,6 @@ export class DrillPageComponent implements OnInit {
 
     // ❗ Call validateMove on the SERVICE, not the worker
     const legal = await this.stockfish.validateMove(this.currentFen, move);
-    console.log(legal);
     if (!legal) {
       this.playSound('wrong');
       this.highlightSquare(from, 'wrong');

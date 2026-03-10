@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { LeaderboardService } from '../../services/leaderboard.service';
 import { LeaderboardStateService } from '../../services/LeaderboardStateService';
 import { AsyncPipe } from '@angular/common';
+import { LoginService } from '../../services/login.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'leaderboard-panel',
@@ -16,8 +17,23 @@ export class LeaderboardPanelComponent {
 
   selected: 'daily' | 'all' = 'daily';
 
-  constructor(private state: LeaderboardStateService) {
+  isLoggedIn = false;
+
+  constructor(
+    private state: LeaderboardStateService,
+    private loginService: LoginService,
+    private router: Router,
+  ) {
     this.daily$ = this.state.daily$;
     this.allTime$ = this.state.allTime$;
+
+    this.isLoggedIn = this.loginService.getCurrentUser();
+    this.loginService.getUser().subscribe((user) => {
+      this.isLoggedIn = !!user;
+    });
+  }
+  loginFromLeaderboard() {
+    const returnUrl = this.router.url; // capture current page
+    this.router.navigate(['/login'], { queryParams: { returnUrl } });
   }
 }
