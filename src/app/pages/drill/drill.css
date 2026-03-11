@@ -8,11 +8,11 @@
 }
 
 /* =========================================================
-   LEFT PANEL
+   LEFT PANEL (fixed 30%)
    ========================================================= */
 .left-panel {
-  width: 280px;
-  min-width: 260px;
+  width: 30%;
+  min-width: 240px; /* optional safety */
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -21,82 +21,14 @@
   background: #f7f7f7;
   border-right: 1px solid #ddd;
   gap: 30px;
-  overflow: hidden;
-}
-
-/* Opening Details */
-.opening-details {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #ddd;
-}
-
-.opening-name {
-  font-size: 22px;
-  font-weight: 700;
-  color: #222;
-  margin: 0;
-}
-
-.variation-name {
-  font-size: 15px;
-  color: #555;
-  margin: 0;
-}
-
-.progress-badge {
-  margin-top: 6px;
-  display: inline-block;
-  padding: 4px 10px;
-  background: #e0e0e0;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-/* Leaderboard */
-.leaderboard {
-  flex-grow: 1;
-  overflow: hidden;
-}
-
-.leaderboard-title {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-
-.leaderboard-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.leader-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 10px;
-  background: white;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-}
-
-.user-name {
-  font-weight: 600;
-}
-
-.user-score {
-  font-weight: 700;
-  color: #333;
+  overflow-y: auto;
 }
 
 /* =========================================================
-   RIGHT PANEL
+   RIGHT PANEL (auto-calculates available space)
    ========================================================= */
 .right-panel {
-  flex: 1;
+  width: 70%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -106,114 +38,42 @@
 }
 
 /* =========================================================
-   BOARD + EVAL BAR
+   BOARD + EVAL BAR (responsive)
    ========================================================= */
 .board-and-bar {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 12px;
   flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
   overflow: hidden;
 }
 
+/* Container expands to fill available space */
 .board-container {
-  width: 600px;
-  height: 600px;
-  position: relative;
+  flex: 1;
+  max-width: 100%;
+  max-height: 100%;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
 
+/* Board auto-scales to largest possible square */
 .board {
-  width: 100%;
-  height: 100%;
+  width: min(100%, calc(100vh - 200px)); /* auto-fit based on height */
+  height: auto;
+  aspect-ratio: 1 / 1;
   border-radius: 8px;
   overflow: hidden;
 }
 
+/* Eval bar matches board height */
 .eval-bar {
   width: 40px;
-  height: 600px;
+  height: min(100%, calc(100vh - 200px));
+  max-height: 100%;
   display: flex;
   align-items: stretch;
-}
-
-/* =========================================================
-   MOVE INDICATOR
-   ========================================================= */
-.move-indicator {
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  font-weight: 600;
-  color: #444;
-}
-
-/* =========================================================
-   MOBILE LAYOUT
-   ========================================================= */
-@media (max-width: 900px) {
-  .drill-layout {
-    flex-direction: column;
-  }
-
-  .board-and-bar {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .board-container {
-    width: 100%;
-    max-width: 330px;
-    height: auto;
-  }
-
-  .board {
-    width: 100%;
-    height: auto !important;
-    aspect-ratio: 1 / 1;
-  }
-
-  .eval-bar {
-    width: 100%;
-    max-width: 40px;
-    height: 180px;
-    margin-top: 12px;
-  }
-}
-
-/* =========================================================
-   MOVE FEEDBACK (Correct/Wrong)
-   ========================================================= */
-.square-correct {
-  background-color: rgba(0, 200, 0, 0.35) !important;
-  transition: background-color 0.4s ease;
-}
-
-.square-wrong {
-  background-color: rgba(255, 0, 0, 0.35) !important;
-}
-
-.board-shake {
-  animation: shake 0.3s;
-}
-
-@keyframes shake {
-  0% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-6px);
-  }
-  50% {
-    transform: translateX(6px);
-  }
-  75% {
-    transform: translateX(-6px);
-  }
-  100% {
-    transform: translateX(0);
-  }
 }
