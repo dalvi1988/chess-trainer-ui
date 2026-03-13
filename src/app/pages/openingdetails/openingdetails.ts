@@ -66,44 +66,50 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
 
     this.openingSub = this.openingsService.getByName(openingName).subscribe((data: Opening) => {
       this.opening = data;
+
       const currentUser = this.loginService.getCurrentUser();
 
       if (currentUser) {
-        // Logged-in → save first, then show dialog
         this.userProgressService.getCompletedVariationIds().subscribe((ids) => {
           this.completedVariationIds = ids;
-          console.log('completdID' + this.completedVariationIds);
+          console.log('completedID: ' + this.completedVariationIds);
         });
       }
+
+      // Board orientation
       this.orientation = this.opening.side?.toLowerCase().trim() === 'black' ? 'black' : 'white';
 
-      // ⭐⭐⭐ SEO: Dynamic Title + Meta Description
-      this.title.setTitle(`${this.opening.name} – Chess Opening Guide`);
+      // ⭐⭐⭐ SEO: Dynamic Title + High‑CTR Meta Description
+      this.title.setTitle(`Master the ${this.opening.name} – Free Chess Opening Guide`);
+
       this.meta.updateTag({
         name: 'description',
-        content: `${this.opening.name} explained with moves, ideas, traps, and variations. Learn how to play and counter this opening with interactive training.`,
-      });
-      this.meta.updateTag({
-        name: 'keywords',
-        content: `${this.opening.name}, chess opening, ${this.opening.side} openings, chess theory, ${this.opening.eco}`,
+        content: `Master the ${this.opening.name} with clear ideas, traps, and winning plans. 100% free chess training with guided lines, interactive practice, and beginner‑friendly explanations.`,
       });
 
-      // ⭐ Optional: Structured Data (helps Bing/Google understand the page)
+      this.meta.updateTag({
+        name: 'keywords',
+        content: `${this.opening.name}, ${this.opening.eco}, chess opening guide, ${this.opening.side} openings, chess traps, chess ideas, how to play ${this.opening.name}, free chess training`,
+      });
+
+      // ⭐⭐⭐ Structured Data (Rich Results + Thumbnail in Google)
       const schema = {
         '@context': 'https://schema.org',
         '@type': 'Article',
-        headline: this.opening.name,
-        description: this.opening.description,
+        headline: `Master the ${this.opening.name}`,
+        description: `Learn the ${this.opening.name} with ideas, traps, winning plans, and guided lines. 100% free interactive chess training.`,
         author: 'ChessLearningHub',
-        url: `https://chesslearninghub.com/openings/${this.opening.name}`,
-        keywords: `${this.opening.name}, chess opening, ${this.opening.eco}`,
+        url: `https://www.chesslearninghub.com/openings/${this.opening.name}`,
+        image: `https://www.chesslearninghub.com/assets/openings/${this.opening.name}.jpg`,
+        keywords: `${this.opening.name}, chess opening, ${this.opening.eco}, free chess lessons`,
       };
+
       this.meta.updateTag({
         name: 'schema',
         content: JSON.stringify(schema),
       });
 
-      // ⭐ Variation selection logic (unchanged)
+      // ⭐ Variation selection logic
       if (this.opening.variations?.length > 0) {
         const first = this.opening.variations[0];
         this.selectedVariation = first;
@@ -138,14 +144,6 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
       drawable: {
         enabled: true,
         visible: true,
-        brushes: {
-          green: { key: 'green', color: '#15781B', opacity: 0.5, lineWidth: 10 },
-          red: { key: 'red', color: '#882020', opacity: 0.5, lineWidth: 10 },
-          blue: { key: 'blue', color: '#003088', opacity: 0.5, lineWidth: 10 },
-          yellow: { key: 'yellow', color: '#e68f00', opacity: 0.5, lineWidth: 10 },
-          correct: { key: 'correct', color: '#4caf50', opacity: 0.5, lineWidth: 10 },
-          wrong: { key: 'wrong', color: '#f44336', opacity: 0.5, lineWidth: 10 },
-        },
         shapes: [],
       },
 
@@ -165,24 +163,6 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.openingSub?.unsubscribe();
-  }
-
-  // ---------- helpers ----------
-
-  private normalizeSan(san: string): string {
-    if (!san) return san;
-
-    // ❗ Do NOT remove promotion piece
-    // Remove check/mate only
-    san = san.replace(/[+#]/g, '');
-
-    // Remove capture symbol
-    san = san.replace(/x/g, '');
-
-    // Remove disambiguation (but keep promotion)
-    san = san.replace(/^[KQRBN]?[a-h]?[1-8]?/, '');
-
-    return san.trim();
   }
 
   private clearShapes(brush: string) {
@@ -563,12 +543,6 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
   private completionTimeout: any;
   private handleMoveResult(move: any, from: string, to: string) {
     const expected = this.variationMoves[this.currentMoveIndex];
-
-    console.log('RAW move.san:', move.san);
-    console.log('RAW expected:', expected);
-    console.log('NORM move.san:', this.normalizeSan(move.san));
-    console.log('NORM expected:', this.normalizeSan(expected));
-    console.log('currentMoveIndex:', this.currentMoveIndex);
 
     if (move.san === expected) {
       this.playSound(move.flags.includes('c') ? 'capture' : 'move');
