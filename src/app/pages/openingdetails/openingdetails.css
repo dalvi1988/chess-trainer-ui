@@ -157,49 +157,47 @@ coords {
    MOBILE LAYOUT (FIXED + VERIFIED)
    ========================================================= */
 @media (max-width: 768px) {
-  /* STACK EVERYTHING */
   .trainer-container {
     flex-direction: column;
     padding: 12px;
     gap: 20px;
   }
 
-  /* SHOW SIDE PANEL FIRST */
   .side-panel {
     width: 100%;
     order: 1;
   }
 
+  /* KEEP BOARD + EVAL BAR IN ONE ROW */
   .board-and-bar {
     width: 100%;
-    flex-direction: column;
+    flex-direction: row; /* <-- FIX */
+    justify-content: center;
     align-items: center;
+    gap: 8px;
     order: 2;
   }
 
-  /* RESPONSIVE BOARD — THE REAL FIX */
+  /* BOARD AUTO‑SCALES */
   .board {
-    width: 100%;
+    width: calc(100vw - 80px); /* leave space for eval bar */
     max-width: 330px;
     height: auto !important;
     aspect-ratio: 1 / 1;
   }
 
   .board-container {
-    width: 100%;
     display: flex;
     justify-content: center;
   }
 
-  /* EVAL BAR BELOW BOARD */
+  /* EVAL BAR STAYS NEXT TO BOARD */
   .eval-bar {
-    width: 100%;
-    max-width: 40px;
-    height: 180px;
-    margin: 12px auto 0;
+    width: 40px;
+    height: calc(100vw - 80px); /* match board height */
+    max-height: 330px;
   }
 
-  /* MOBILE TYPOGRAPHY */
   .opening-title {
     font-size: 22px;
     text-align: center;
