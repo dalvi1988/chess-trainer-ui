@@ -92,6 +92,48 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
         content: `${this.opening.name}, ${this.opening.eco}, chess opening guide, ${this.opening.side} openings, chess traps, chess ideas, how to play ${this.opening.name}, free chess training`,
       });
 
+      // ⭐⭐⭐ Open Graph (helps Google + social media)
+      this.meta.updateTag({
+        property: 'og:title',
+        content: `Master the ${this.opening.name} – Free Chess Opening Guide`,
+      });
+
+      this.meta.updateTag({
+        property: 'og:description',
+        content: `Master the ${this.opening.name} with clear ideas, traps, and winning plans. 100% free interactive chess training.`,
+      });
+
+      this.meta.updateTag({
+        property: 'og:image',
+        content: `https://www.chesslearninghub.com/assets/openings/${this.opening.name}.jpg`,
+      });
+
+      this.meta.updateTag({
+        property: 'og:url',
+        content: `https://www.chesslearninghub.com/openings/${encodeURIComponent(this.opening.name)}`,
+      });
+
+      // ⭐⭐⭐ Twitter Card (helps thumbnails appear faster)
+      this.meta.updateTag({
+        name: 'twitter:card',
+        content: 'summary_large_image',
+      });
+
+      this.meta.updateTag({
+        name: 'twitter:title',
+        content: `Master the ${this.opening.name} – Free Chess Opening Guide`,
+      });
+
+      this.meta.updateTag({
+        name: 'twitter:description',
+        content: `Master the ${this.opening.name} with clear ideas, traps, and winning plans. 100% free interactive chess training.`,
+      });
+
+      this.meta.updateTag({
+        name: 'twitter:image',
+        content: `https://www.chesslearninghub.com/assets/openings/${this.opening.name}.jpg`,
+      });
+
       // ⭐⭐⭐ Structured Data (Rich Results + Thumbnail in Google)
       const schema = {
         '@context': 'https://schema.org',
@@ -99,7 +141,7 @@ export class Openingdetails implements AfterViewInit, OnInit, OnDestroy {
         headline: `Master the ${this.opening.name}`,
         description: `Learn the ${this.opening.name} with ideas, traps, winning plans, and guided lines. 100% free interactive chess training.`,
         author: 'ChessLearningHub',
-        url: `https://www.chesslearninghub.com/openings/${this.opening.name}`,
+        url: `https://www.chesslearninghub.com/openings/${encodeURIComponent(this.opening.name)}`,
         image: `https://www.chesslearninghub.com/assets/openings/${this.opening.name}.jpg`,
         keywords: `${this.opening.name}, chess opening, ${this.opening.eco}, free chess lessons`,
       };
